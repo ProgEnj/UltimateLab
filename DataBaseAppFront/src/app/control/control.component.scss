@@ -1,0 +1,16 @@
+@import "../../styles.scss";
+
+.control {
+  @include element;
+  width: 100%;
+  height: 20vh;
+}
+
+.display {
+  @include element;
+  width: 100%;
+}
+
+.base-button {
+  @include button;
+}
