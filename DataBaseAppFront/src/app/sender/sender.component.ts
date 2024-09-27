@@ -22,7 +22,7 @@ export class SenderComponent {
   });
 
   onSubmit(){
-    this.http.PostData('/weatherforecasts', {temp: Number(this.weatherForm.value.temp), date: this.weatherForm.value.date!, summary: String(this.weatherForm.value.summary)});
+    this.http.PostData('/weatherforecasts', {id: 0, temp: Number(this.weatherForm.value.temp), date: this.weatherForm.value.date!, summary: String(this.weatherForm.value.summary)});
   }
 
 }

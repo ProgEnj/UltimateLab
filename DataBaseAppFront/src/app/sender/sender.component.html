@@ -1,30 +1,24 @@
 <div class="forms">
     <p>Weather forecast form</p>
     <form [formGroup]="weatherForm" (ngSubmit)="onSubmit()">
-        <div>
-            <mat-form-field>
-                <mat-label>Temperature</mat-label>
-                <input matInput type="number" formControlName="temp"/>
-            </mat-form-field>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">a</span>
+            <input formControlName="temp" type="number" class="form-control" placeholder="example" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">a</span>
+            <input formControlName="date" type="date" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">Options</label>
+            <select formControlName="summary" class="form-select" id="inputGroupSelect01">
+                @for (summary of summaryOptions; track summary) {
+                    <option [value]="summary">{{summary}}</option>
+                }
+            </select>
         </div>
         <div>
-            <mat-form-field>
-                <mat-label></mat-label>
-                <input matInput type="date" formControlName="date">
-            </mat-form-field>
-        </div>
-        <div>
-            <mat-form-field> 
-                <mat-label>Summary</mat-label>
-                <mat-select formControlName="summary"> 
-                    @for (summary of summaryOptions; track summary) {
-                        <mat-option [value]="summary">{{summary}}</mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div>
-            <button type="submit">Submit</button>
+            <button type="submit" class="btn btn-light">Submit</button>
         </div>
     </form>
 </div>

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
+import { Weatherforecast } from '../weatherforecast';
 
 @Component({
   selector: 'app-display',
@@ -10,6 +11,6 @@ import { MatTableModule } from '@angular/material/table';
 })
 export class DisplayComponent {
   columnsToDisplay: string[] = ["id", "temp", "date", "summary"];
-  @Input() dataSource: object[] = []; 
+  @Input() dataSource: Weatherforecast[] = []; 
 
 }

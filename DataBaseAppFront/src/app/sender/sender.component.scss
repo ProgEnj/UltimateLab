@@ -1,9 +1,5 @@
 @import "../../styles.scss";
 
-button{
-    @include button;
-}
-
 .forms{
     display: flex;
     flex-flow: column nowrap;

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { DisplayComponent } from "../display/display.component";
 import { HttpService } from '../http.service';
+import { Weatherforecast } from '../weatherforecast';
 
 @Component({
   selector: 'app-control',
@@ -12,34 +13,33 @@ import { HttpService } from '../http.service';
 })
 export class ControlComponent {
   constructor(private http: HttpService){}
-  dataSource: object[] = [];
-  mockSource: object[] = [
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-    {id: 1, temp: 20, date: "123123123", summary: "aboba"},
-  ];
-  
-  GetAll(){
+  dataSource: Weatherforecast[] = [];
+  mockSource: Weatherforecast[] = [
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+      {id: 1, temp: 20, date: "123123123", summary: "aboba"},
+    ];
+  ExecuteQuery(){
     this.http.GetData("/weatherforecasts").subscribe(json => {this.dataSource = json})
   }
 }
