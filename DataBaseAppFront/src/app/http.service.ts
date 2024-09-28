@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Weatherforecast } from './weatherforecast';
+import { Lectern } from './interfaces/lectern';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class HttpService {
   GetData(url: string): Observable<any>{
     return this.http.get<any>(this.host + url);
   }
-  PostData(url:string, forecast: Weatherforecast){
-    return this.http.post<any>(this.host + url, forecast).subscribe();
+  PostData(url:string, lectern: Lectern){
+    return this.http.post<any>(this.host + url, lectern).subscribe();
   }
 }

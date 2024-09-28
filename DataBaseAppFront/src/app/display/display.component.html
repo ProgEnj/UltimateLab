@@ -1,21 +1,20 @@
 <div class="table-wrapper">
-<table class="table">
-  <thead>
-    <tr>
-        @for (item of columnsToDisplay; track $index) {
-           <th>{{item}}</th> 
-        }
-    </tr>
-  </thead>
-  <tbody>
-    @for (item of dataSource; track item.id) {
+  <table class="table">
+    <thead>
       <tr>
-        <td scope="row">{{item.id}}</td>
-        <td scope="row">{{item.temp}}</td>
-        <td scope="row">{{item.date}}</td>
-        <td scope="row">{{item.summary}}</td>
+          @for (item of columnsToDisplay; track $index) {
+            <th>{{item}}</th> 
+          }
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      @for (item of dataSource; track $index) {
+        <tr>
+          @for (column of columnsToDisplay; track $index) {
+            <td>{{item[column]}}</td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>
