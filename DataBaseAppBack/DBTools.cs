@@ -7,7 +7,6 @@ public static class DBTools
 {
     private static string connetionString = "Host=localhost;Username=postgres;Password=postpast;Database=ForLabs";
     private static NpgsqlDataSource dataSource;
-
     static DBTools()
     {
         var dataSourceBuilder = new NpgsqlDataSourceBuilder(connetionString);
