@@ -3,13 +3,32 @@ namespace Maps;
 
 public static class GetMap
 {
-    public static void Map(WebApplication app)
+    public static RouteGroupBuilder MapGet(this RouteGroupBuilder group)
     {
-        app.MapGet("/weatherforecasts", async () => 
+        group.MapGet("get/students", async () => 
         {
-            var result = await DBTools.GetAllForecasts();
+            var result = await DBTools.GetStudents();
             return result.Count > 0 ?  Results.Ok(result) : Results.NotFound(new {});
-        })
-            .WithOpenApi();
+        });
+
+        group.MapGet("get/groups", async () => 
+        {
+            var result = await DBTools.GetGroups();
+            return result.Count > 0 ?  Results.Ok(result) : Results.NotFound(new {});
+        });
+
+        group.MapGet("get/lecterns", async () => 
+        {
+            var result = await DBTools.GetLecterns();
+            return result.Count > 0 ?  Results.Ok(result) : Results.NotFound(new {});
+        });
+
+        group.MapGet("get/specialities", async () => 
+        {
+            var result = await DBTools.GetSpecialities();
+            return result.Count > 0 ?  Results.Ok(result) : Results.NotFound(new {});
+        });
+        
+        return group;
     }
 }

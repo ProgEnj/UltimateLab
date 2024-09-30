@@ -22,8 +22,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors();
 
-GetMap.Map(app);
-PostMap.Map(app);
+app.MapGroup("/api/")
+    .MapGet()
+    .WithTags("Api");
 
 app.Run();
 

@@ -10,22 +10,23 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 export class DisplayComponent implements OnChanges {
   tablesRows: any =
     {
-      Students: ["id", "surname", "related_group", "lectern_id", "rating"],
-      Groups: ["id", "code", "lectern_id", "speciality_id"],
-      Lecterns: ["id", "faculty", "manager"],
-      Specialities: ["id", "code", "name", "field"]
+      students: ["id", "surname", "related_group", "lectern_id", "rating"],
+      groups: ["id", "code", "lectern_id", "speciality_id"],
+      lecterns: ["id", "faculty", "manager"],
+      specialities: ["id", "code", "name", "field"]
     }
-  @Input() dataSource: Array<any> = []; 
-  @Input() table: string = "Lecterns";
+  @Input() dataSource: Array<any> = [];
+  @Input() table: string = "";
+
   columnsToDisplay: Array<string> = this.tablesRows[this.table];
+
   ngOnChanges(changes: SimpleChanges): void{
     if(changes["table"])
     {
-      this.ChangeSource();
+      this.ChangeColumns();
     }
   }
-
-  ChangeSource():void{
+  ChangeColumns():void{
     this.columnsToDisplay = this.tablesRows[this.table];
   }
 
