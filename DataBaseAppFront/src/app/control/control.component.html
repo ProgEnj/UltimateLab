@@ -3,7 +3,7 @@
         <button type="button" class="btn btn-light" (click)="ExecuteQuery()">Execute query</button>
     </div>
     <div>
-        <select [(ngModel)]="table" class="form-select" id="inputGroupSelect01">
+        <select [(ngModel)]="table" class="form-select" id="inputGroupSelect">
             <option hidden>Choose table</option>
             <option value="students">Students</option>
             <option value="groups">Groups</option>
@@ -19,6 +19,14 @@
             <option value="UPDATE">UPDATE</option>
             <option value="DELETE">DELETE</option>
         </select>
+    </div>
+    <div class="checkboxes">
+        @for (item of columnstoDisplay; track $index) {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox" value="{{item}}">
+                <label class="form-check-label" for="inlineCheckbox">{{item}}</label>
+            </div>
+        }
     </div>
 </div>
 <div class="display">

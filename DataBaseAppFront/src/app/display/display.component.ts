@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { TableRowsService } from '../table-rows.service';
 
 @Component({
   selector: 'app-display',
@@ -8,17 +9,11 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   styleUrl: './display.component.scss'
 })
 export class DisplayComponent implements OnChanges {
-  tablesRows: any =
-    {
-      students: ["id", "surname", "related_group", "lectern_id", "rating"],
-      groups: ["id", "code", "lectern_id", "speciality_id"],
-      lecterns: ["id", "faculty", "manager"],
-      specialities: ["id", "code", "name", "field"]
-    }
+  constructor(private rows: TableRowsService){}
   @Input() dataSource: Array<any> = [];
   @Input() table: string = "";
 
-  columnsToDisplay: Array<string> = this.tablesRows[this.table];
+  columnsToDisplay: Array<string> = [];
 
   ngOnChanges(changes: SimpleChanges): void{
     if(changes["table"])
@@ -27,7 +22,7 @@ export class DisplayComponent implements OnChanges {
     }
   }
   ChangeColumns():void{
-    this.columnsToDisplay = this.tablesRows[this.table];
+    this.columnsToDisplay = this.rows.GetRows(this.table);
   }
 
 }
