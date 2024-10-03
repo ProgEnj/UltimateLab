@@ -15,10 +15,4 @@ import { HttpService } from './http.service';
 })
 export class AppComponent {
   title = 'DataBaseAppFront';
-  constructor(private http: HttpService){}
-  ngOnInit(): void{
-    this.http.GetData("/weatherforecasts").subscribe( json => {
-      console.log(json);
-    });
-  }
 }

@@ -3,7 +3,7 @@
         <button type="button" class="btn btn-light" (click)="ExecuteQuery()">Execute query</button>
     </div>
     <div>
-        <select [(ngModel)]="table" class="form-select" id="inputGroupSelect">
+        <select [(ngModel)]="table" class="form-select" id="inputGroupSelect" (ngModelChange)="onTableChange($event)">
             <option hidden>Choose table</option>
             <option value="students">Students</option>
             <option value="groups">Groups</option>
@@ -21,14 +21,17 @@
         </select>
     </div>
     <div class="checkboxes">
+        <!-- FIXME: $index is causing angular to not rerender some checkboxes as their index is unchanged.
+             Either change structure of columnstoDisplay somehow or try to learn another framework, idk-->
         @for (item of columnstoDisplay; track $index) {
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="inlineCheckbox" value="{{item}}">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox" value="{{item}}"
+                 (change)="onCheckChange(item)">
                 <label class="form-check-label" for="inlineCheckbox">{{item}}</label>
             </div>
         }
     </div>
 </div>
 <div class="display">
-    <app-display [dataSource]="dataSource" [table]="this.table"></app-display>
+    <app-display [dataSource]="dataSource" [columnsToDisplay]="this.checkBoxOptions"></app-display>
 </div>

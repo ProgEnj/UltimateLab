@@ -13,16 +13,16 @@ export class DisplayComponent implements OnChanges {
   @Input() dataSource: Array<any> = [];
   @Input() table: string = "";
 
-  columnsToDisplay: Array<string> = [];
+  @Input() columnsToDisplay: Array<string> = [];
 
   ngOnChanges(changes: SimpleChanges): void{
     if(changes["table"])
     {
-      this.ChangeColumns();
+      this.dataSource = [];
+      //this.ChangeColumns();
     }
   }
   ChangeColumns():void{
-    this.columnsToDisplay = this.rows.GetRows(this.table);
-  }
-
+      this.columnsToDisplay = this.rows.GetRows(this.table);
+    }
 }
