@@ -3,7 +3,9 @@
     <thead>
       <tr>
           @for (item of columnsToDisplay; track $index) {
-            <th>{{item}}</th> 
+            @if (item !== "0") {
+              <th>{{item}}</th> 
+            }
           }
       </tr>
     </thead>

@@ -18,8 +18,8 @@ export class ControlComponent {
   table: string = "Choose table";
   queryType: string = "Choose query type";
 
-  checkBoxOptions: Array<any> = [];
-  columnstoDisplay: Array<string> = [];
+  checkBoxOptions: Array<string> = [];
+  columnstoDisplay: Array<any> = [];
   
   ExecuteQuery(){
     if(this.queryType == "RETRIEVE"){
@@ -27,18 +27,36 @@ export class ControlComponent {
     }
   }
 
-  onTableChange(value: string): void {
-    this.columnstoDisplay = this.rows.GetRows(this.table);
-    this.checkBoxOptions = this.rows.GetRows(this.table);
+  onTableChange(event: any): void {
+    this.columnstoDisplay = this.rows.GetRows(this.table).map((value) => ({label: value, isChecked: true}));
+    this.checkBoxOptions = Array.from(this.rows.GetRows(this.table));
   }
 
-  onCheckChange(value: string): void {
-    if(this.checkBoxOptions.includes(value)) {
-      this.checkBoxOptions = this.checkBoxOptions.filter((item) => item != value);
-    }
+  onCheckChange(value: string, index: number): void {
+    if(value != "0" && this.checkBoxOptions.includes(value)) {
+      this.checkBoxOptions.fill("0", index, index + 1);
+      this.columnstoDisplay[index].isChecked = false;
+      /*
+      
+        Very strange Angular behaviour. Apparently(i made a research) there is no way to render elements
+        with @for without trackby statement (because of optimisation blah blah). So even if i have a small
+        amount of elements i still need to provide some unique property of an item.
+
+        My checkboxes were a simple array of strings, so when the table was changed, the checkbox array was simply
+        substituted to a different array and indexes were the same. Then @for rendered a new array
+        and kept the state of the checkboxes. So if the table was students and an id box was unchecked,
+        then the table became Groups, the id box kept to be unchecked.
+
+        Now the checkboxes have a isChecked property, so when the table changes it updates this property
+        to true and the state of the checkboxes changes. Two way bounding doesn't help and yes,
+        checkboxes are broken in angular
+
+      */
+    }   
     else {
-      this.checkBoxOptions.push(value);
+      this.checkBoxOptions[index] = this.columnstoDisplay[index].label;
+      //this.columnstoDisplay[index].isChecked = true; this code doesn't make sense because we
+      //just need to track if checkbox was unchecked
     }
   }
-
 }
