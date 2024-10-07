@@ -1,12 +1,23 @@
 <div class="forms">
-    <p>Weather forecast form</p>
-    <form [formGroup]="weatherForm" (ngSubmit)="onSubmit()">
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">a</span>
-            <input formControlName="temp" type="number" class="form-control" placeholder="example" aria-label="Username" aria-describedby="basic-addon1">
-        </div>
+    <p>Input form:</p>
+    <div>
+        <select [(ngModel)]="table" class="form-select mb-3" id="inputGroupSelect" (ngModelChange)="onTableChange()">
+            <option hidden>Choose table</option>
+            <option value="students">Students</option>
+            <option value="groups">Groups</option>
+            <option value="specialities">Specialities</option>
+            <option value="lecterns">Lecterns</option>
+        </select>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        @for (item of columnsToDisplay; track $index) {
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">{{item.label}}</span>
+                <input formControlName="{{item.label}}" type="{{item.type}}" class="form-control">
+            </div>
+        }
         <div>
-            <button type="submit" class="btn btn-light">Submit</button>
+            <button type="submit" class="btn btn-light" [disabled]="!form.valid">Submit</button>
         </div>
     </form>
 </div>

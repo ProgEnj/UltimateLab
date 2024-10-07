@@ -64,23 +64,73 @@ public static class DBTools
 
         return collection;
     }
-    // public static async Task<int> InsertForecast(WeatherForecast forecast)
-    // {
+    public static async Task<int> InsertStudent(Student student)
+    {
 
-    //     await using var connection = await dataSource.OpenConnectionAsync();
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var cmd = new NpgsqlCommand("INSERT INTO students (surname, related_group, join_year, rating) " + 
+        "VALUES ($1, $2, $3, $4);", connection)
+        {
+            Parameters = 
+            {
+                new() {Value = student.surname},
+                new() {Value = student.related_group},
+                new() {Value = student.join_year},
+                new() {Value = student.rating}
+            }
+        };
+        var result = await cmd.ExecuteNonQueryAsync();      
+        return result;
+    }
 
-    //     await using var cmd = new NpgsqlCommand("INSERT INTO weatherforecasts (date, temp, summary) " + 
-    //     "VALUES ($1, $2, $3);", connection)
-    //     {
-    //         Parameters = 
-    //         {
-    //             new() {Value = forecast.date},
-    //             new() {Value = forecast.temp},
-    //             new() {Value = forecast.summary}
-    //         }
-    //     };
-    //     var result = await cmd.ExecuteNonQueryAsync();      
-    //     return result;
-    // }
+    public static async Task<int> InsertLectern(Lectern lectern)
+    {
 
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var cmd = new NpgsqlCommand("INSERT INTO lecterns (faculty, manager) " + 
+        "VALUES ($1, $2);", connection)
+        {
+            Parameters = 
+            {
+                new() {Value = lectern.faculty},
+                new() {Value = lectern.manager}
+            }
+        };
+        var result = await cmd.ExecuteNonQueryAsync();      
+        return result;
+    }
+    public static async Task<int> InsertGroup(Group group)
+    {
+
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var cmd = new NpgsqlCommand("INSERT INTO groups (code, lectern_id, speciality_id) " + 
+        "VALUES ($1, $2, $3);", connection)
+        {
+            Parameters = 
+            {
+                new() {Value = group.code},
+                new() {Value = group.lectern_id},
+                new() {Value = group.speciality_id}
+            }
+        };
+        var result = await cmd.ExecuteNonQueryAsync();      
+        return result;
+    }
+    public static async Task<int> InsertSpeciality(Speciality speciality)
+    {
+
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var cmd = new NpgsqlCommand("INSERT INTO specialities (code, name, field) " + 
+        "VALUES ($1, $2, $3);", connection)
+        {
+            Parameters = 
+            {
+                new() {Value = speciality.code},
+                new() {Value = speciality.name},
+                new() {Value = speciality.field}
+            }
+        };
+        var result = await cmd.ExecuteNonQueryAsync();      
+        return result;
+    }
 }

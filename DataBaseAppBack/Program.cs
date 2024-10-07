@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Maps;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,8 +24,10 @@ app.UseHttpsRedirection();
 app.UseCors();
 
 app.MapGroup("/api/")
-    .MapGet()
+    .PostMap()
+    .GetMap()
     .WithTags("Api");
+
 
 app.Run();
 

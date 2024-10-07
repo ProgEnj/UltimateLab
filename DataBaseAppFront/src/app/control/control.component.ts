@@ -26,7 +26,7 @@ export class ControlComponent {
   
   ExecuteQuery(){
     if(this.queryType == "RETRIEVE"){
-      this.http.GetData("/api/get/" + this.table).subscribe(json => {this.dataSource = json;});
+      this.http.GetData("/" + this.table).subscribe(json => {this.dataSource = json;});
     }
     this.textArea = true;
     this.sqlQuery = this.buildSqlQuery();

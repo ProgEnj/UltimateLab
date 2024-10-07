@@ -10,12 +10,12 @@ export class HttpService {
 
   constructor(private http: HttpClient) { }
 
-  private host: string = "http://localhost:5233";
+  private host: string = "http://localhost:5233/api";
 
   GetData(url: string): Observable<any>{
-    return this.http.get<any>(this.host + url);
+    return this.http.get<any>(this.host + "/get" + url);
   }
-  PostData(url:string, lectern: Lectern){
-    return this.http.post<any>(this.host + url, lectern).subscribe();
+  PostData(url:string, data: any){
+    return this.http.post<any>(this.host + "/post" + url, data);
   }
 }
