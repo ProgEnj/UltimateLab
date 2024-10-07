@@ -6,12 +6,32 @@ import { Injectable } from '@angular/core';
 export class TableRowsService {
   private tableRows: any =
     {
-      students: ["id", "surname", "related_group", "lectern_id", "rating"],
-      groups: ["id", "code", "lectern_id", "speciality_id"],
-      lecterns: ["id", "faculty", "manager"],
-      specialities: ["id", "code", "name", "field"]
+      students: [
+        {label: "id", type: "number"},
+        {label: "surname", type: "text"},
+        {label: "related_group", type: "number"}, 
+        {label: "lectern_id", type: "number"},
+        {label: "rating", type: "number"},
+      ],
+      groups: [
+        {label: "id", type: "number"},
+        {label: "code", type: "number"},
+        {label: "lectern_id", type: "number"}, 
+        {label: "speciality_id", type: "number"},
+      ],
+      lecterns: [
+        {label: "id", type: "number"},
+        {label: "faculty", type: "text"},
+        {label: "manager", type: "text"}, 
+      ],
+      specialities: [
+        {label: "id", type: "number"},
+        {label: "code", type: "number"},
+        {label: "name", type: "text"}, 
+        {label: "field", type: "text"}, 
+      ],
     };
-  GetRows(table: string): Array<string>{
+  GetRows(table: string): Array<any>{
     return this.tableRows[table];
   }
 }

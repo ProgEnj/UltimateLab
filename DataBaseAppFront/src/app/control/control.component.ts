@@ -1,4 +1,4 @@
-import { Component, inject, OnChanges, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { DisplayComponent } from '../display/display.component';
 import { HttpService } from '../http.service';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,9 @@ export class ControlComponent {
   dataSource: Array<any> = [];
   table: string = "Choose table";
   queryType: string = "Choose query type";
+  textArea: boolean = false;
+
+  sqlQuery: string = "";
 
   checkBoxOptions: Array<string> = [];
   columnstoDisplay: Array<any> = [];
@@ -25,11 +28,14 @@ export class ControlComponent {
     if(this.queryType == "RETRIEVE"){
       this.http.GetData("/api/get/" + this.table).subscribe(json => {this.dataSource = json;});
     }
+    this.textArea = true;
+    this.sqlQuery = this.buildSqlQuery();
+
   }
 
   onTableChange(event: any): void {
-    this.columnstoDisplay = this.rows.GetRows(this.table).map((value) => ({label: value, isChecked: true}));
-    this.checkBoxOptions = Array.from(this.rows.GetRows(this.table));
+    this.columnstoDisplay = this.rows.GetRows(this.table).map(value => ({label: value.label, isChecked: true}));
+    this.checkBoxOptions = Array.from(this.rows.GetRows(this.table).map(x => x.label));
   }
 
   onCheckChange(value: string, index: number): void {
@@ -58,5 +64,33 @@ export class ControlComponent {
       //this.columnstoDisplay[index].isChecked = true; this code doesn't make sense because we
       //just need to track if checkbox was unchecked
     }
+  }
+
+  buildSqlQuery(): string{
+    var command: string = "";
+    var columns: string = this.checkBoxOptions.filter(x => x !== "0").join(', ')
+    switch (this.queryType) {
+      case "CREATE":
+        command = `INSERT INTO ${this.table} (${columns}) VALUES ();`
+        break;
+      case "RETRIEVE":
+        command = `SELECT (${columns}) FROM ${this.table};`
+        break;
+      case "UPDATE":
+        command = `UPDATE;`
+        break;
+      case "DELETE":
+        command = `DELETE;`
+        break;
+    }
+    return command;
+  }
+
+  downloadFile(){
+    var file = new Blob([this.sqlQuery], {type: "text/plain"});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(file);
+    a.download = "query.txt";
+    a.click();
   }
 }

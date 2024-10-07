@@ -29,6 +29,12 @@
             </div>
         }
     </div>
+    <div class="text-area">
+        @if (this.textArea) {
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" maxlength="200">{{sqlQuery}}</textarea>
+            <button type="button" class="btn btn-light mt-2" (click)="downloadFile()">Save</button>
+        }
+    </div>
 </div>
 <div class="display">
     <app-display [dataSource]="dataSource" [columnsToDisplay]="this.checkBoxOptions"></app-display>

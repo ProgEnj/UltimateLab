@@ -14,7 +14,6 @@ import { HttpService } from '../http.service';
 })
 export class SenderComponent {
   constructor(private http: HttpService) {}
-  summaryOptions: string[] = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
   weatherForm = new FormGroup({
     temp: new FormControl('', Validators.required),
     date: new FormControl('', Validators.required),
@@ -22,7 +21,5 @@ export class SenderComponent {
   });
 
   onSubmit(){
-    //this.http.PostData('/weatherforecasts', {id: 0, temp: Number(this.weatherForm.value.temp), date: this.weatherForm.value.date!, summary: String(this.weatherForm.value.summary)});
   }
-
 }

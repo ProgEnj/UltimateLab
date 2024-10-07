@@ -19,10 +19,6 @@ export class DisplayComponent implements OnChanges {
     if(changes["table"])
     {
       this.dataSource = [];
-      //this.ChangeColumns();
     }
   }
-  ChangeColumns():void{
-      this.columnsToDisplay = this.rows.GetRows(this.table);
-    }
 }
