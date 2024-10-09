@@ -105,6 +105,7 @@ export class ControlComponent {
     a.click();
   }
 
+  // I should make this as queryData interface or make query-data implementation simpler
   onQueryData(data: any) {
     switch (data.purpose) {
       case "formData":
