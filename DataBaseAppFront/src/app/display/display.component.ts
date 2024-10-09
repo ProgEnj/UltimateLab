@@ -15,7 +15,7 @@ export class DisplayComponent implements OnChanges {
 
   @Input() columnsToDisplay: Array<string> = [];
 
-  ngOnChanges(changes: SimpleChanges): void{
+  ngOnChanges(changes: SimpleChanges): void {
     if(changes["table"])
     {
       this.dataSource = [];

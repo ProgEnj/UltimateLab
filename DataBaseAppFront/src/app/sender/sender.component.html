@@ -1,14 +1,5 @@
 <div class="forms">
     <p>Input form:</p>
-    <div>
-        <select [(ngModel)]="table" class="form-select mb-3" id="inputGroupSelect" (ngModelChange)="onTableChange()">
-            <option hidden>Choose table</option>
-            <option value="students">Students</option>
-            <option value="groups">Groups</option>
-            <option value="specialities">Specialities</option>
-            <option value="lecterns">Lecterns</option>
-        </select>
-    </div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         @for (item of columnsToDisplay; track $index) {
             <div class="input-group mb-3">
@@ -17,7 +8,7 @@
             </div>
         }
         <div>
-            <button type="submit" class="btn btn-light" [disabled]="!form.valid">Submit</button>
+            <button type="submit" class="btn btn-light">Submit</button>
         </div>
     </form>
 </div>

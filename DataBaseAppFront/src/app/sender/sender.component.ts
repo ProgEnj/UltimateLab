@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { HttpService } from '../http.service';
 import { TableRowsService } from '../table-rows.service';
+import { QueryDataService } from '../query-data.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,8 +14,12 @@ import { TableRowsService } from '../table-rows.service';
   styleUrl: './sender.component.scss'
 })
 export class SenderComponent {
-  constructor(private http: HttpService, private rows: TableRowsService) {}
+  subscription: Subscription;
+  constructor(private http: HttpService, private rows: TableRowsService, private queryData: QueryDataService) {
+    this.subscription = this.queryData.getCall.subscribe(x => this.onQueryData(x));
+  }
   table: string = "";
+  queryType: string = "";
   form = new FormGroup({});
   columnsToDisplay: any = [];
 
@@ -23,6 +29,23 @@ export class SenderComponent {
   }
 
   onSubmit(){
-    this.http.PostData(`/${this.table}`, this.form.getRawValue()).subscribe(x => console.log(x));
+    this.queryData.setCall("formData", this.form.getRawValue());
+    //this.http.PostData(`/${this.table}`, this.form.getRawValue()).subscribe(x => console.log(x));
   }
+
+  onQueryData(data: any){
+    switch (data.purpose) {
+      case "table":
+        this.table = data.message;
+        this.onTableChange();
+        break;
+      case "query":
+        this.queryType = data.message;
+        break;
+    
+      default:
+        break;
+    }
+  }
+
 }

@@ -3,6 +3,8 @@ import { DisplayComponent } from '../display/display.component';
 import { HttpService } from '../http.service';
 import { FormsModule } from '@angular/forms';
 import { TableRowsService } from '../table-rows.service';
+import { QueryDataService } from '../query-data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-control',
@@ -12,11 +14,16 @@ import { TableRowsService } from '../table-rows.service';
   styleUrl: './control.component.scss'
 })
 export class ControlComponent {
-  constructor(private http: HttpService, private rows: TableRowsService){}
+
+  subscription: Subscription;
+  constructor(private http: HttpService, private rows: TableRowsService, private queryData: QueryDataService) {
+    this.subscription = queryData.getCall.subscribe(x => this.onQueryData(x));
+  }
 
   dataSource: Array<any> = [];
   table: string = "Choose table";
   queryType: string = "Choose query type";
+  formData: any;
   textArea: boolean = false;
 
   sqlQuery: string = "";
@@ -30,12 +37,16 @@ export class ControlComponent {
     }
     this.textArea = true;
     this.sqlQuery = this.buildSqlQuery();
-
   }
 
   onTableChange(event: any): void {
     this.columnstoDisplay = this.rows.GetRows(this.table).map(value => ({label: value.label, isChecked: true}));
     this.checkBoxOptions = Array.from(this.rows.GetRows(this.table).map(x => x.label));
+    this.queryData.setCall("table", this.table)
+  }
+
+  onQueryChange(event: any): void {
+    this.queryData.setCall("query", this.queryType);
   }
 
   onCheckChange(value: string, index: number): void {
@@ -71,7 +82,7 @@ export class ControlComponent {
     var columns: string = this.checkBoxOptions.filter(x => x !== "0").join(', ')
     switch (this.queryType) {
       case "CREATE":
-        command = `INSERT INTO ${this.table} (${columns}) VALUES ();`
+        command = `INSERT INTO ${this.table} (${columns}) VALUES (${Object.values(this.formData).join(', ')});`
         break;
       case "RETRIEVE":
         command = `SELECT (${columns}) FROM ${this.table};`
@@ -92,5 +103,17 @@ export class ControlComponent {
     a.href = URL.createObjectURL(file);
     a.download = "query.txt";
     a.click();
+  }
+
+  onQueryData(data: any) {
+    switch (data.purpose) {
+      case "formData":
+        this.formData = data.message;
+        break;
+    
+      default:
+        break;
+    }
+
   }
 }
