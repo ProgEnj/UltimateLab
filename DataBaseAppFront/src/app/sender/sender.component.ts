@@ -25,7 +25,7 @@ export class SenderComponent {
   columnsToDisplay: any = [];
 
   onTableChange() {
-    this.columnsToDisplay = this.rows.GetRows(this.table).filter(x => x.label !== "id");
+    //this.columnsToDisplay = this.rows.GetRows(this.table).filter(x => x.label !== "id");
     if(this.queryType !== "DELETE"){
       this.columnsToDisplay.forEach(((x: any) => this.form.addControl(x.label, new FormControl('', Validators.required))));
       if (this.queryType == "UPDATE") {

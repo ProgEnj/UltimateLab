@@ -4,7 +4,8 @@ import { HttpService } from '../http.service';
 import { FormsModule } from '@angular/forms';
 import { TableRowsService } from '../table-rows.service';
 import { QueryDataService } from '../query-data.service';
-import { last, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TableData } from '../interfaces/table-data';
 
 @Component({
   selector: 'app-control',
@@ -14,45 +15,49 @@ import { last, Subscription } from 'rxjs';
   styleUrl: './control.component.scss'
 })
 export class ControlComponent {
-
-  subscription: Subscription;
   constructor(private http: HttpService, private rows: TableRowsService, private queryData: QueryDataService) {
     this.subscription = queryData.getCall.subscribe(x => this.onQueryData(x));
   }
 
+  subscription: Subscription;
+
   dataSource: Array<any> = [];
-  table: string = "Choose table";
-  queryType: string = "Choose query type";
-  formData: any;
-  textArea: boolean = false;
+  tableOption: string = "Choose table";
+  queryOption: string = "Choose query type";
 
+  checkBoxOptions: Array<TableData> = [];
+  columnstoDisplay: Array<TableData> = [];
+
+  //formData: any;
+  textAreaShow: boolean = false;
   sqlQuery: string = "";
-
-  checkBoxOptions: Array<string> = [];
-  columnstoDisplay: Array<any> = [];
   
   ExecuteQuery(){
-    if(this.queryType == "RETRIEVE"){
-      this.http.GetData("/" + this.table).subscribe(json => {this.dataSource = json;});
+    if(this.queryOption == "RETRIEVE"){
+      this.http.GetData("/" + this.tableOption).subscribe(json => {this.dataSource = json;});
     }
-    this.textArea = true;
+    this.textAreaShow = true;
     this.sqlQuery = this.buildSqlQuery();
   }
 
-  onTableChange(event: any): void {
-    this.columnstoDisplay = this.rows.GetRows(this.table).map(value => ({label: value.label, isChecked: true}));
-    this.checkBoxOptions = Array.from(this.rows.GetRows(this.table).map(x => x.label));
-    this.queryData.setCall("table", this.table)
+  onTableChange(event: Event): void {
+    this.columnstoDisplay = this.rows.GetRows(this.tableOption, true);
+    this.checkBoxOptions = Array.from(this.rows.GetRows(this.tableOption, true));
+    console.log(this.columnstoDisplay);
+    console.log(this.checkBoxOptions);
+    this.queryData.setCall("table", this.tableOption)
   }
 
-  onQueryChange(event: any): void {
-    this.queryData.setCall("query", this.queryType);
+  onQueryChange(event: Event): void {
+    this.queryData.setCall("query", this.queryOption);
   }
 
-  onCheckChange(value: string, index: number): void {
-    if(value != "0" && this.checkBoxOptions.includes(value)) {
-      this.checkBoxOptions.fill("0", index, index + 1);
-      this.columnstoDisplay[index].isChecked = false;
+  onCheckChange(index: number): void {
+    var checkBox = this.checkBoxOptions[index];
+    var columns = this.columnstoDisplay[index];
+    if(checkBox.isShown) {
+      checkBox.isShown = false
+      columns.isShown = false;
       /*
       
         Very strange Angular behaviour. Apparently(i made a research) there is no way to render elements
@@ -71,28 +76,28 @@ export class ControlComponent {
       */
     }   
     else {
-      this.checkBoxOptions[index] = this.columnstoDisplay[index].label;
-      //this.columnstoDisplay[index].isChecked = true; this code doesn't make sense because we
+      checkBox.isShown = true;
+      //columns.isShown = true; this code doesn't even make sense because we
       //just need to track if checkbox was unchecked
     }
   }
 
   buildSqlQuery(): string{
     var command: string = "";
-    var columns: string[] = this.checkBoxOptions.filter(x => x !== "0");
+    var columns: Array<TableData> = this.checkBoxOptions.filter(x => x.isShown == true);
     console.log(columns);
-    switch (this.queryType) {
+    switch (this.queryOption) {
       case "CREATE":
-        command = `INSERT INTO ${this.table} (${columns.join(', ')}) VALUES (${Object.values(this.formData).join(', ')});`
+        //command = `INSERT INTO ${this.tableOption} (${columns.join(', ')}) VALUES (${Object.values(this.formData).join(', ')});`
         break;
       case "RETRIEVE":
-        command = `SELECT (${columns.join(', ')}) FROM ${this.table};`
+        command = `SELECT (${columns.join(', ')}) FROM ${this.tableOption};`
         break;
       case "UPDATE":
-        var values = Object.values(this.formData);
-        console.log(values);
-        var whereID = values.pop();
-        command = `UPDATE ${this.table} SET ${values.map((x, i) => `${columns[i]} = ${x}, `)} WHERE id = ${whereID}`
+        //var values = Object.values(this.formData);
+        //console.log(values);
+        //var whereID = values.pop();
+        //command = `UPDATE ${this.tableOption} SET ${values.map((x, i) => `${columns[i]} = ${x}, `)} WHERE id = ${whereID}`
         break;
       case "DELETE":
         command = `DELETE;`
@@ -113,7 +118,7 @@ export class ControlComponent {
   onQueryData(data: any) {
     switch (data.purpose) {
       case "formData":
-        this.formData = data.message;
+        //this.formData = data.message;
         break;
     
       default:

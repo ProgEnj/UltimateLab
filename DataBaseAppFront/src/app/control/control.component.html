@@ -3,7 +3,7 @@
         <button type="button" class="btn btn-light" (click)="ExecuteQuery()">Execute query</button>
     </div>
     <div>
-        <select [(ngModel)]="table" class="form-select" id="inputGroupSelect" (ngModelChange)="onTableChange($event)">
+        <select [(ngModel)]="tableOption" class="form-select" id="inputGroupSelect" (ngModelChange)="onTableChange($event)">
             <option hidden>Choose table</option>
             <option value="students">Students</option>
             <option value="groups">Groups</option>
@@ -12,7 +12,7 @@
         </select>
     </div>
     <div>
-        <select class="form-select" [(ngModel)]="queryType" (ngModelChange)="onQueryChange($event)">
+        <select class="form-select" [(ngModel)]="queryOption" (ngModelChange)="onQueryChange($event)">
             <option hidden>Choose query type</option>
             <option value="CREATE">CREATE</option>
             <option value="RETRIEVE">RETRIEVE</option>
@@ -24,13 +24,13 @@
         @for (item of columnstoDisplay; track $index; let i = $index) {
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="inlineCheckbox" value="{{item.label}}"
-                (change)="onCheckChange(item.label, i)" [checked]="item.isChecked">
+                (change)="onCheckChange(i)" [checked]="item.isShown">
                 <label class="form-check-label" for="inlineCheckbox">{{item.label}}</label>
             </div>
         }
     </div>
     <div class="text-area">
-        @if (this.textArea) {
+        @if (this.textAreaShow) {
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" maxlength="200">{{sqlQuery}}</textarea>
             <button type="button" class="btn btn-light mt-2" (click)="downloadFile()">Save</button>
         }

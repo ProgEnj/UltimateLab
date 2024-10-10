@@ -3,8 +3,8 @@
     <thead>
       <tr>
           @for (item of columnsToDisplay; track $index) {
-            @if (item !== "0") {
-              <th>{{item}}</th> 
+            @if (item.isShown) {
+              <th>{{item.label}}</th> 
             }
             @else {
               <th>###</th>
@@ -16,7 +16,7 @@
       @for (item of dataSource; track $index) {
         <tr>
           @for (column of columnsToDisplay; track $index) {
-            <td>{{item[column]}}</td>
+            <td>{{item[column.label]}}</td>
           }
         </tr>
       }
