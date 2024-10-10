@@ -4,7 +4,7 @@ import { HttpService } from '../http.service';
 import { FormsModule } from '@angular/forms';
 import { TableRowsService } from '../table-rows.service';
 import { QueryDataService } from '../query-data.service';
-import { Subscription } from 'rxjs';
+import { last, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-control',
@@ -79,16 +79,20 @@ export class ControlComponent {
 
   buildSqlQuery(): string{
     var command: string = "";
-    var columns: string = this.checkBoxOptions.filter(x => x !== "0").join(', ')
+    var columns: string[] = this.checkBoxOptions.filter(x => x !== "0");
+    console.log(columns);
     switch (this.queryType) {
       case "CREATE":
-        command = `INSERT INTO ${this.table} (${columns}) VALUES (${Object.values(this.formData).join(', ')});`
+        command = `INSERT INTO ${this.table} (${columns.join(', ')}) VALUES (${Object.values(this.formData).join(', ')});`
         break;
       case "RETRIEVE":
-        command = `SELECT (${columns}) FROM ${this.table};`
+        command = `SELECT (${columns.join(', ')}) FROM ${this.table};`
         break;
       case "UPDATE":
-        command = `UPDATE;`
+        var values = Object.values(this.formData);
+        console.log(values);
+        var whereID = values.pop();
+        command = `UPDATE ${this.table} SET ${values.map((x, i) => `${columns[i]} = ${x}, `)} WHERE id = ${whereID}`
         break;
       case "DELETE":
         command = `DELETE;`

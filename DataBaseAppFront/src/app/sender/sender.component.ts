@@ -18,22 +18,32 @@ export class SenderComponent {
   constructor(private http: HttpService, private rows: TableRowsService, private queryData: QueryDataService) {
     this.subscription = this.queryData.getCall.subscribe(x => this.onQueryData(x));
   }
+
   table: string = "";
   queryType: string = "";
   form = new FormGroup({});
   columnsToDisplay: any = [];
 
-  onTableChange(){
+  onTableChange() {
     this.columnsToDisplay = this.rows.GetRows(this.table).filter(x => x.label !== "id");
-    this.columnsToDisplay.forEach(((x: any) => this.form.addControl(x.label, new FormControl('', Validators.required))));
+    if(this.queryType !== "DELETE"){
+      this.columnsToDisplay.forEach(((x: any) => this.form.addControl(x.label, new FormControl('', Validators.required))));
+      if (this.queryType == "UPDATE") {
+        this.form.addControl("whereID", new FormControl('', Validators.required));
+        console.log("Im here");
+      }
+    }
+    else {
+      this.form.addControl("whereID", new FormControl('', Validators.required));
+    }
   }
 
-  onSubmit(){
+  onSubmit( ) {
     this.queryData.setCall("formData", this.form.getRawValue());
     //this.http.PostData(`/${this.table}`, this.form.getRawValue()).subscribe(x => console.log(x));
   }
 
-  onQueryData(data: any){
+  onQueryData(data: any) {
     switch (data.purpose) {
       case "table":
         this.table = data.message;

@@ -1,14 +1,28 @@
 <div class="forms">
     <p>Input form:</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        @for (item of columnsToDisplay; track $index) {
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">{{item.label}}</span>
-                <input formControlName="{{item.label}}" type="{{item.type}}" class="form-control">
+        @if (this.queryType !== "DELETE") {
+            @for (item of columnsToDisplay; track item.label) {
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">{{item.label}}</span>
+                    <input formControlName="{{item.label}}" type="{{item.type}}" class="form-control">
+                </div>
+            }
+            @if (this.queryType == "UPDATE") {
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">item ID</span>
+                    <input formControlName="whereID" type="number" class="form-control">
+                </div>
+            }
+        }
+        @else {
+            <div class="input-group mb-3 mt-5">
+                <span class="input-group-text" id="basic-addon1">item ID</span>
+                <input formControlName="whereID" type="number" class="form-control">
             </div>
         }
         <div>
-            <button type="submit" class="btn btn-light">Submit</button>
+            <button type="submit" class="btn btn-light"[disabled]="!form.valid">Submit</button>
         </div>
     </form>
 </div>

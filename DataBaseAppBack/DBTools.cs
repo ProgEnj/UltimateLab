@@ -1,7 +1,5 @@
 using Npgsql;
 using Model;
-using System.Reflection.Metadata.Ecma335;
-using System.Data;
 namespace DataBaseAppBack;
 public static class DBTools
 {
