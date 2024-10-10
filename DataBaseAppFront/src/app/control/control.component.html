@@ -3,7 +3,7 @@
         <button type="button" class="btn btn-light" (click)="ExecuteQuery()">Execute query</button>
     </div>
     <div>
-        <select [(ngModel)]="tableOption" class="form-select" id="inputGroupSelect" (ngModelChange)="onTableChange($event)">
+        <select [(ngModel)]="tableOption" class="form-select" id="inputGroupSelect" (ngModelChange)="onTableChange()">
             <option hidden>Choose table</option>
             <option value="students">Students</option>
             <option value="groups">Groups</option>
@@ -12,7 +12,7 @@
         </select>
     </div>
     <div>
-        <select class="form-select" [(ngModel)]="queryOption" (ngModelChange)="onQueryChange($event)">
+        <select class="form-select" [(ngModel)]="queryOption" (ngModelChange)="onQueryChange()">
             <option hidden>Choose query type</option>
             <option value="CREATE">CREATE</option>
             <option value="RETRIEVE">RETRIEVE</option>

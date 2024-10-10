@@ -7,7 +7,7 @@
               <th>{{item.label}}</th> 
             }
             @else {
-              <th>###</th>
+              <th>{{this.placeholder.repeat(item.label.length)}}</th>
             }
           }
       </tr>
@@ -16,7 +16,12 @@
       @for (item of dataSource; track $index) {
         <tr>
           @for (column of columnsToDisplay; track $index) {
-            <td>{{item[column.label]}}</td>
+            @if (column.isShown) {
+              <td>{{item[column.label]}}</td>
+            }
+            @else {
+              <td> </td>
+            }
           }
         </tr>
       }

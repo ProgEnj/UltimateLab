@@ -28,8 +28,9 @@ export class ControlComponent {
   checkBoxOptions: Array<TableData> = [];
   columnstoDisplay: Array<TableData> = [];
 
-  //formData: any;
-  textAreaShow: boolean = false;
+  formData: any;
+  whereID?: number;
+  textAreaShow: boolean = false; 
   sqlQuery: string = "";
   
   ExecuteQuery(){
@@ -40,15 +41,13 @@ export class ControlComponent {
     this.sqlQuery = this.buildSqlQuery();
   }
 
-  onTableChange(event: Event): void {
-    this.columnstoDisplay = this.rows.GetRows(this.tableOption, true);
-    this.checkBoxOptions = Array.from(this.rows.GetRows(this.tableOption, true));
-    console.log(this.columnstoDisplay);
-    console.log(this.checkBoxOptions);
+  onTableChange(): void {
+    this.columnstoDisplay = this.rows.GetRows(this.tableOption);
+    this.checkBoxOptions = Array.from(this.rows.GetRows(this.tableOption));
     this.queryData.setCall("table", this.tableOption)
   }
 
-  onQueryChange(event: Event): void {
+  onQueryChange(): void {
     this.queryData.setCall("query", this.queryOption);
   }
 
@@ -56,7 +55,7 @@ export class ControlComponent {
     var checkBox = this.checkBoxOptions[index];
     var columns = this.columnstoDisplay[index];
     if(checkBox.isShown) {
-      checkBox.isShown = false
+      checkBox.isShown = false;
       columns.isShown = false;
       /*
       
@@ -77,30 +76,27 @@ export class ControlComponent {
     }   
     else {
       checkBox.isShown = true;
-      //columns.isShown = true; this code doesn't even make sense because we
+      columns.isShown = true; //this code doesn't even make sense because we
       //just need to track if checkbox was unchecked
     }
+    this.queryData.setCall("columns", this.checkBoxOptions);
   }
 
   buildSqlQuery(): string{
     var command: string = "";
-    var columns: Array<TableData> = this.checkBoxOptions.filter(x => x.isShown == true);
-    console.log(columns);
+    var columns: Array<string> = this.checkBoxOptions.filter(x => x.isShown == true && x.label !== "id").map(x => x.label);
     switch (this.queryOption) {
       case "CREATE":
-        //command = `INSERT INTO ${this.tableOption} (${columns.join(', ')}) VALUES (${Object.values(this.formData).join(', ')});`
+        command = `INSERT INTO ${this.tableOption} (${columns.join(', ')}) VALUES (${Object.values(this.formData).join(', ')});`;
         break;
       case "RETRIEVE":
-        command = `SELECT (${columns.join(', ')}) FROM ${this.tableOption};`
+        command = `SELECT (${columns.join(', ')}) FROM ${this.tableOption};`;
         break;
       case "UPDATE":
-        //var values = Object.values(this.formData);
-        //console.log(values);
-        //var whereID = values.pop();
-        //command = `UPDATE ${this.tableOption} SET ${values.map((x, i) => `${columns[i]} = ${x}, `)} WHERE id = ${whereID}`
+        command = `UPDATE ${this.tableOption} SET ${Object.values(this.formData).map((x, i) => `${columns[i]} = ${x}, `).join(', ')} WHERE id = ${this.whereID}`;
         break;
       case "DELETE":
-        command = `DELETE;`
+        command = `DELETE ${this.tableOption} WHERE id = ${this.whereID}`;
         break;
     }
     return command;
@@ -118,9 +114,12 @@ export class ControlComponent {
   onQueryData(data: any) {
     switch (data.purpose) {
       case "formData":
-        //this.formData = data.message;
+        this.formData = data.message;
+        console.log(data.message);
         break;
-    
+      case "whereID":
+        this.whereID = data.message;
+        break;
       default:
         break;
     }

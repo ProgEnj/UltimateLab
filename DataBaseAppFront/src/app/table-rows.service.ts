@@ -39,7 +39,7 @@ export class TableRowsService {
         {label: "field", type: "text", isShown: true}, 
       ],
     };
-  GetRows(table: string, isTrue: boolean): Array<TableData>{
+  GetRows(table: string): Array<TableData>{
     return this.tableRows[table] as Array<TableData>;    
   }
 }

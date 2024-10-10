@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { TableRowsService } from '../table-rows.service';
 import { TableData } from '../interfaces/table-data';
 
 @Component({
@@ -10,7 +9,7 @@ import { TableData } from '../interfaces/table-data';
   styleUrl: './display.component.scss'
 })
 export class DisplayComponent implements OnChanges {
-  constructor(private rows: TableRowsService){}
+  placeholder: string = "#";
   @Input() dataSource: Array<any> = [];
   @Input() table: string = "";
 
