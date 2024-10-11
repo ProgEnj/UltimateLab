@@ -1,54 +1,51 @@
-import { Component } from '@angular/core';
-import { FormControl, FormArray, ReactiveFormsModule, Validators, FormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule, FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { HttpService } from '../http.service';
 import { TableRowsService } from '../table-rows.service';
 import { QueryDataService } from '../query-data.service';
 import { Subscription } from 'rxjs';
 import { TableData } from '../interfaces/table-data';
+import { NgFor } from '@angular/common'; 
+// Maybe I'm dumb, but i just cannot understand how to reach same result with @for
+// because trackBy drives me mad, I just cannot understand how i am suppose to have unique thing on each
+// thing in this world and why I am not able to just re render things
 
 
 @Component({
   selector: 'app-sender',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgFor],
   templateUrl: './sender.component.html',
   styleUrl: './sender.component.scss'
 })
 export class SenderComponent {
   subscription: Subscription;
-  form: FormGroup;
-  constructor(private http: HttpService, private rows: TableRowsService, private queryData: QueryDataService, private formBuilder: FormBuilder) {
+  constructor(private http: HttpService, private rows: TableRowsService, private queryData: QueryDataService, private fb: FormBuilder) {
     this.subscription = this.queryData.getCall.subscribe(x => this.onQueryData(x));
-    this.form = this.formBuilder.group({
-      items: this.formBuilder.array([])
-    });
-  }
-  get items() {
-    return this.form.get('items') as FormArray;
   }
 
   columnsToDisplay: Array<TableData> = [];
   table: string = "";
   queryType: string = "";
   whereId?: number;
+  form = new FormGroup({});
 
   onTableChange() {
+    this.form = this.fb.group({});
     this.columnsToDisplay = this.columnsToDisplay.filter(x => x.label !== "id");
     if(this.queryType !== "DELETE"){
-      for (const element of this.columnsToDisplay) {
-        var control = this.formBuilder.group({}).addControl(element.label, new FormControl(''));
-        this.items.push(control);
-      }
+      this.columnsToDisplay.filter(x => x.isShown !== false).forEach(x => {this.form.addControl(x.label, this.fb.control('', Validators.required))})
     }
   }
 
-
-  onSubmit() {
+  onSubmit(event: any) {
     if(this.queryType !== "DELETE") {
-      //this.queryData.setCall("formData", this.formBuilder.());
+      this.queryData.setCall("formData", this.form.getRawValue());
     }
-    if(this.queryType == "DELETE" || this.queryType == "UPDATE" && this.whereId !== undefined) {
-      this.queryData.setCall("whereID", this.whereId)
+    if(this.queryType == "DELETE" || this.queryType == "UPDATE") {
+      this.whereId = event.target.where.value;
+      console.log(this.whereId);
+      this.queryData.setCall("whereId", this.whereId);
     }
     //this.http.PostData(`/${this.table}`, this.form.getRawValue()).subscribe(x => console.log(x));
   }
@@ -65,7 +62,6 @@ export class SenderComponent {
         break;
       case "columns":
         this.columnsToDisplay = data.message;
-        console.log(this.columnsToDisplay);
         this.onTableChange();
         break;
     

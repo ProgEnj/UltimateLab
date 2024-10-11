@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { DisplayComponent } from '../display/display.component';
 import { HttpService } from '../http.service';
-import { FormsModule } from '@angular/forms';
 import { TableRowsService } from '../table-rows.service';
 import { QueryDataService } from '../query-data.service';
 import { Subscription } from 'rxjs';
@@ -10,7 +9,7 @@ import { TableData } from '../interfaces/table-data';
 @Component({
   selector: 'app-control',
   standalone: true,
-  imports: [DisplayComponent, FormsModule],
+  imports: [DisplayComponent],
   templateUrl: './control.component.html',
   styleUrl: './control.component.scss'
 })
@@ -29,34 +28,35 @@ export class ControlComponent {
   columnstoDisplay: Array<TableData> = [];
 
   formData: any;
-  whereID?: number;
+  whereId?: number;
   textAreaShow: boolean = false; 
   sqlQuery: string = "";
   
   ExecuteQuery(){
     if(this.queryOption == "RETRIEVE"){
-      this.http.GetData("/" + this.tableOption).subscribe(json => {this.dataSource = json;});
+      //this.http.GetData("/" + this.tableOption).subscribe(json => {this.dataSource = json;});
     }
     this.textAreaShow = true;
     this.sqlQuery = this.buildSqlQuery();
   }
 
-  onTableChange(): void {
+  onTableChange(event: any): void {
+    this.tableOption = event.target.value;
+
     this.columnstoDisplay = this.rows.GetRows(this.tableOption);
     this.checkBoxOptions = Array.from(this.rows.GetRows(this.tableOption));
     this.queryData.setCall("table", this.tableOption)
   }
 
-  onQueryChange(): void {
+  onQueryChange(event: any): void {
+    this.queryOption = event.target.value;
     this.queryData.setCall("query", this.queryOption);
   }
 
   onCheckChange(index: number): void {
-    var checkBox = this.checkBoxOptions[index];
-    var columns = this.columnstoDisplay[index];
-    if(checkBox.isShown) {
-      checkBox.isShown = false;
-      columns.isShown = false;
+    var column = this.columnstoDisplay[index];
+    if(column.isShown) {
+      column.isShown = false;
       /*
       
         Very strange Angular behaviour. Apparently(i made a research) there is no way to render elements
@@ -75,8 +75,7 @@ export class ControlComponent {
       */
     }   
     else {
-      checkBox.isShown = true;
-      columns.isShown = true; //this code doesn't even make sense because we
+      column.isShown = true; //this code doesn't even make sense because we
       //just need to track if checkbox was unchecked
     }
     this.queryData.setCall("columns", this.checkBoxOptions);
@@ -93,10 +92,12 @@ export class ControlComponent {
         command = `SELECT (${columns.join(', ')}) FROM ${this.tableOption};`;
         break;
       case "UPDATE":
-        command = `UPDATE ${this.tableOption} SET ${Object.values(this.formData).map((x, i) => `${columns[i]} = ${x}, `).join(', ')} WHERE id = ${this.whereID}`;
+        command = `UPDATE ${this.tableOption} SET ${Object.values(this.formData).map((x, i) => `${columns[i]} = ${x}`)} WHERE id = ${this.whereId}`;
+        //console.log(this.formData);
+        //console.log(Object.values(this.formData).map((x, i) => `${columns[i]} = ${x}, `));
         break;
       case "DELETE":
-        command = `DELETE ${this.tableOption} WHERE id = ${this.whereID}`;
+        command = `DELETE ${this.tableOption} WHERE id = ${this.whereId}`;
         break;
     }
     return command;
@@ -115,10 +116,10 @@ export class ControlComponent {
     switch (data.purpose) {
       case "formData":
         this.formData = data.message;
-        console.log(data.message);
+        //console.log(data.message);
         break;
-      case "whereID":
-        this.whereID = data.message;
+      case "whereId":
+        this.whereId = data.message;
         break;
       default:
         break;
