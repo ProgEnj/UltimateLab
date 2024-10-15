@@ -26,6 +26,8 @@ app.UseCors();
 app.MapGroup("/api/")
     .PostMap()
     .GetMap()
+    .DeleteMap()
+    .UpdateMap()
     .WithTags("Api");
 
 

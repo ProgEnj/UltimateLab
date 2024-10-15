@@ -33,11 +33,26 @@ export class ControlComponent {
   sqlQuery: string = "";
   
   ExecuteQuery(){
-    if(this.queryOption == "RETRIEVE"){
-      //this.http.GetData("/" + this.tableOption).subscribe(json => {this.dataSource = json;});
-    }
     this.textAreaShow = true;
     this.sqlQuery = this.buildSqlQuery();
+    switch (this.queryOption) {
+      case "CREATE":
+        this.http.PostData("/" + this.tableOption, this.formData).subscribe();
+        break;
+      case "RETRIEVE":
+        this.http.GetData("/" + this.tableOption).subscribe(json => {this.dataSource = json;});
+        break;
+      case "UPDATE":
+        var columns: Array<string> = this.checkBoxOptions.filter(x => x.isShown == true && x.label !== "id").map(x => x.label);
+        var data: Array<string> = Object.values(this.formData).map((x, i) => `${columns[i]} = '${x}'`);
+        this.http.UpdateData(this.tableOption, this.whereId!, data).subscribe();
+        break;
+      case "DELETE":
+        this.http.DeleteData(this.tableOption, this.whereId!).subscribe();
+        break
+      default:
+        break;
+    }
   }
 
   onTableChange(event: any): void {

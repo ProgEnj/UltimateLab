@@ -131,4 +131,34 @@ public static class DBTools
         var result = await cmd.ExecuteNonQueryAsync();      
         return result;
     }
+
+    public static async Task<int> UpdateInTable(string table, int id, List<string> values)
+    {
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var cmd = new NpgsqlCommand($"UPDATE {table} SET {string.Join(',', values.ToArray())} WHERE " + 
+        "id = $1;", connection)
+        {
+            Parameters = 
+            {
+                new() {Value = id},
+            }
+        };
+        var result = await cmd.ExecuteNonQueryAsync();      
+        return result;
+    }
+
+    public static async Task<int> DeleteInTable(string table, int id)
+    {
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var cmd = new NpgsqlCommand($"DELETE FROM {table} WHERE " + 
+        "id = $1;", connection)
+        {
+            Parameters = 
+            {
+                new() {Value = id},
+            }
+        };
+        var result = await cmd.ExecuteNonQueryAsync();      
+        return result;
+    }
 }

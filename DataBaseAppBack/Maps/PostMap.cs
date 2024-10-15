@@ -2,7 +2,7 @@ using DataBaseAppBack;
 using Model;
 namespace Maps;
 
-public static class Map
+public static class MapPost
 {
     public static RouteGroupBuilder PostMap(this RouteGroupBuilder group)
     {
