@@ -18,7 +18,7 @@ export class TableRowsService {
         {label: "id", type: "number", isShown: true},
         {label: "surname", type: "text", isShown: true},
         {label: "related_group", type: "number", isShown: true}, 
-        {label: "lectern_id", type: "number", isShown: true},
+        {label: "join_year", type: "number", isShown: true},
         {label: "rating", type: "number", isShown: true},
       ],
       groups: [

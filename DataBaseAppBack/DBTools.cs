@@ -18,7 +18,7 @@ public static class DBTools
 
         while (await reader.ReadAsync())
         {
-            students.Add(new Student(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4)));
+            students.Add(new Student(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetDouble(4)));
         }
 
         return students;
@@ -31,7 +31,7 @@ public static class DBTools
 
         while (await reader.ReadAsync())
         {
-            collection.Add(new Group(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3)));
+            collection.Add(new Group(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetInt32(3)));
         }
 
         return collection;

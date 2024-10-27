@@ -7,9 +7,9 @@ public class Student
     public string surname { get; set; }
     public int related_group { get; set; }
     public int join_year { get; set; }
-    public int rating { get; set; }
+    public double rating { get; set; }
 
-    public Student(int id, string surname, int related_group, int join_year, int rating)
+    public Student(int id, string surname, int related_group, int join_year, double rating)
     {
         this.id = id;
         this.surname = surname;
