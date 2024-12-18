@@ -1,0 +1,32 @@
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>✔</th>
+        @for(item of headerSource; track $index){
+          @if(item.isShown){
+            <th>{{ item.label }}</th>
+          }
+          @else{
+            <th>{{ this.placeholder.repeat(item.label.length) }}</th>
+          }
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for(row of dataSource; track $index){
+        <tr>
+          <input type="radio" name="check" (click)="onRadioCheck(row)">
+          @for(item of headerSource; track $index){
+            @if (item.isShown){
+              <td>{{ row[item.label] }}</td>
+            }
+            @else{
+              <td></td>
+            }
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

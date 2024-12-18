@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'DataBaseAppFront' title`, () => {
+  it(`should have the 'DatabaseAppFront' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('DataBaseAppFront');
+    expect(app.title).toEqual('DatabaseAppFront');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, DataBaseAppFront');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, DatabaseAppFront');
   });
 });

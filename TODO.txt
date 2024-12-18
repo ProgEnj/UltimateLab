@@ -1,0 +1,15 @@
+TODO lab3:
+Keep model the same
+rewrite frontend based on this structure
+with the idea of each component as I/O reusable
+piece of code or rewrite it to vite (preferred) +
+app
+|-main
+| |- Control
+| |- Table
+| |- Sender
+
+Main difference from last lab:
+-all CRUD opetarions must have 3 editable where statement arguments
+- retrieve on every execute click +
+- delete deletes selected row in table +

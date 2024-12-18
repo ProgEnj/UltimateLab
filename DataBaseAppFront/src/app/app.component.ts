@@ -1,16 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ControlComponent } from './control/control.component';
-import { SenderComponent } from './sender/sender.component';
-
+import { MainComponent } from './main/main.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ControlComponent, SenderComponent],
+  imports: [RouterOutlet, MainComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'DataBaseAppFront';
+  title = 'DatabaseAppFront';
 }

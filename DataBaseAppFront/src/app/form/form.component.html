@@ -1,0 +1,35 @@
+<h1 style="margin: 5px;">Input form:</h1>
+<div class="form-fields">
+  <div class="where-field">
+    <select class="form-select" (change)="onWhereField($event)">
+        <option hidden>Where field</option>
+        @for (item of this.fields; track $index){
+          <option value="{{ item.label }}">{{item.label}}</option>
+        }
+    </select>
+  </div>
+  <div class="where-input" style="">
+    <input type="text" [(ngModel)]="whereValue">
+  </div>
+</div>
+<form [formGroup]="form" (ngSubmit)="onSubmit($event)">
+  <div class="form-fields">
+    <div class="form-group">
+      <div class="form-group-element" *ngFor="let item of this.fields">
+          @if (item.isShown) {
+              <label class="input-group-text" id="basic-addon1">{{item.label}}</label>
+          }
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-group-element" *ngFor="let item of this.fields">
+          @if (item.isShown) {
+              <input formControlName="{{item.label}}" type="text" class="form-control">
+          }
+      </div>
+    </div>
+  </div>
+  <div>
+      <button type="submit" class="btn btn-light">Submit</button>
+  </div>
+</form>

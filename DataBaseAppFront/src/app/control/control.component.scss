@@ -1,26 +1,63 @@
 @import "../../styles.scss";
 
-.control {
-  @include element;
-  width: 100%;
-  height: 20vh;
+.main-wrapper {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  background-color: rgb(250, 235, 215);
+  max-height: 100%;
 }
 
-.display {
+.left-side {
+  display: flex;
+  flex-grow: 3;
+  flex-flow: column;
+}
+
+.right-side {
   @include element;
-  width: 100%;
+  margin-left: 0;
+  display: flex;
+  flex-grow: 1;
+}
+
+.form {
+}
+
+.control {
+  @include element;
+  display: flex;
+  min-height: 205px;
+}
+
+.option-control {
+  display: flex;
+}
+
+.control-checkboxes {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-control {
+  display: flex;
+  flex-flow: column;
+}
+
+.table {
+  @include element;
+  height: 100%;
+  margin-top: 0;
+}
+
+.form-select {
+  height: 2rem;
+  margin: 2px;
 }
 
 .checkboxes {
   font-size: larger;
   display: flex;
   flex-flow: column wrap;
-  width: 30%;
   height: 100%;
 }
 

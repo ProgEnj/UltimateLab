@@ -1,0 +1,18 @@
+@import "../../styles.scss";
+
+.form-fields {
+  display: flex;
+  column-gap: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-flow: column;
+}
+
+.form-group-element {
+  height: 20px;
+  margin: 2px;
+}
+
+

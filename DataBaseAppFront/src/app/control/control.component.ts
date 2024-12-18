@@ -1,79 +1,85 @@
-import { Component } from '@angular/core';
-import { DisplayComponent } from '../display/display.component';
+import { Component, Input } from '@angular/core';
 import { HttpService } from '../http.service';
-import { TableRowsService } from '../table-rows.service';
-import { QueryDataService } from '../query-data.service';
-import { Subscription } from 'rxjs';
-import { TableData } from '../interfaces/table-data';
+import { TableComponent } from '../table/table.component';
+import { FormComponent } from '../form/form.component';
 
 @Component({
   selector: 'app-control',
   standalone: true,
-  imports: [DisplayComponent],
+  imports: [ TableComponent, FormComponent ],
   templateUrl: './control.component.html',
   styleUrl: './control.component.scss'
 })
 export class ControlComponent {
-  constructor(private http: HttpService, private rows: TableRowsService, private queryData: QueryDataService) {
-    this.subscription = queryData.getCall.subscribe(x => this.onQueryData(x));
-  }
-
-  subscription: Subscription;
+  constructor(private http: HttpService) {}
 
   dataSource: Array<any> = [];
+  headerSource: Array<any> = [];
+
   tableOption: string = "Choose table";
   queryOption: string = "Choose query type";
 
-  checkBoxOptions: Array<TableData> = [];
-  columnstoDisplay: Array<TableData> = [];
-
   formData: any;
-  whereId?: number;
-  textAreaShow: boolean = false; 
+  whereField: string = "";
+  @Input() whereId?: number;
+
+  textAreaShow: boolean = false;
   sqlQuery: string = "";
-  
-  ExecuteQuery(){
-    this.textAreaShow = true;
-    this.sqlQuery = this.buildSqlQuery();
-    switch (this.queryOption) {
-      case "CREATE":
-        this.http.PostData("/" + this.tableOption, this.formData).subscribe();
-        break;
-      case "RETRIEVE":
-        this.http.GetData("/" + this.tableOption).subscribe(json => {this.dataSource = json;});
-        break;
-      case "UPDATE":
-        var columns: Array<string> = this.checkBoxOptions.filter(x => x.isShown == true && x.label !== "id").map(x => x.label);
-        var data: Array<string> = Object.values(this.formData).map((x, i) => `${columns[i]} = '${x}'`);
-        this.http.UpdateData(this.tableOption, this.whereId!, data).subscribe();
-        break;
-      case "DELETE":
-        this.http.DeleteData(this.tableOption, this.whereId!).subscribe();
-        break
-      default:
-        break;
-    }
+
+  ExecuteQuery(queryOption: string){
+      switch (queryOption) {
+        case "RETRIEVE":
+          this.RetrieveQuery();
+          break;
+        case "CREATE":
+          this.http.PostData("/" + this.tableOption, this.formData).subscribe(x => this.RetrieveQuery());
+          break;
+        case "UPDATE":
+          let columns: Array<string> = this.headerSource.filter(x => x.isShown == true && x.label !== "id").map(x => x.label);
+          let data: Array<string> = Object.values(this.formData).map((x, i) => `${columns[i]} = '${x}'`);
+          this.http.UpdateData(this.tableOption, this.whereId!, data).subscribe(x => this.RetrieveQuery());
+          break;
+        case "DELETE":
+          this.http.DeleteData(this.tableOption, this.whereId!).subscribe(x => this.RetrieveQuery());
+          break
+        default:
+          break;
+      }
+  }
+
+  RetrieveQuery(): void {
+    this.http.GetData("/" + this.tableOption, this.whereField).subscribe(json => {this.headerSource = json.columns.map((x:any) => ({label: x, isShown: true})); this.dataSource = json.data});
+    this.BuildSqlQuery();
+  }
+
+  setID(event: any): void {
+    this.whereId = event.id;
+  }
+
+  setData(event: any): void {
+    this.formData = event;
+  }
+
+  setWhereField(event: any): void {
+    this.whereField = event;
   }
 
   onTableChange(event: any): void {
     this.tableOption = event.target.value;
-
-    this.columnstoDisplay = this.rows.GetRows(this.tableOption);
-    this.checkBoxOptions = Array.from(this.rows.GetRows(this.tableOption));
-    this.queryData.setCall("table", this.tableOption)
+      this.http.GetData("/" + this.tableOption).subscribe(json => {this.headerSource = json.columns.map((x:any) => ({label: x, isShown: true})); this.dataSource = json.data});
   }
 
   onQueryChange(event: any): void {
     this.queryOption = event.target.value;
-    this.queryData.setCall("query", this.queryOption);
   }
 
   onCheckChange(index: number): void {
-    var column = this.columnstoDisplay[index];
+    let foo = Object.create(this.headerSource);
+    let column = foo[index];
     if(column.isShown) {
       column.isShown = false;
       /*
-      
+
         Very strange Angular behaviour. Apparently(i made a research) there is no way to render elements
         with @for without trackby statement (because of optimisation blah blah). So even if i have a small
         amount of elements i still need to provide some unique property of an item.
@@ -88,17 +94,18 @@ export class ControlComponent {
         checkboxes are broken in angular
 
       */
-    }   
+    }
     else {
-      column.isShown = true; //this code doesn't even make sense because we
+      column.isShown = true;
+      //this code doesn't even make sense for checkboxes update because we
       //just need to track if checkbox was unchecked
     }
-    this.queryData.setCall("columns", this.checkBoxOptions);
+    this.headerSource = foo;
   }
 
-  buildSqlQuery(): string{
-    var command: string = "";
-    var columns: Array<string> = this.checkBoxOptions.filter(x => x.isShown == true && x.label !== "id").map(x => x.label);
+  BuildSqlQuery(): string {
+    let command: string = "";
+    let columns: Array<string> = this.headerSource.filter(x => x.isShown == true && x.label !== "id").map(x => x.label);
     switch (this.queryOption) {
       case "CREATE":
         command = `INSERT INTO ${this.tableOption} (${columns.join(', ')}) VALUES (${Object.values(this.formData).join(', ')});`;
@@ -108,37 +115,21 @@ export class ControlComponent {
         break;
       case "UPDATE":
         command = `UPDATE ${this.tableOption} SET ${Object.values(this.formData).map((x, i) => `${columns[i]} = ${x}`)} WHERE id = ${this.whereId}`;
-        //console.log(this.formData);
-        //console.log(Object.values(this.formData).map((x, i) => `${columns[i]} = ${x}, `));
         break;
       case "DELETE":
         command = `DELETE ${this.tableOption} WHERE id = ${this.whereId}`;
         break;
     }
+    this.sqlQuery = command;
+    this.textAreaShow = true;
     return command;
   }
 
-  downloadFile(){
-    var file = new Blob([this.sqlQuery], {type: "text/plain"});
-    var a = document.createElement('a');
+  downloadFile() {
+    let file = new Blob([this.sqlQuery], {type: "text/plain"});
+    let a = document.createElement('a');
     a.href = URL.createObjectURL(file);
     a.download = "query.txt";
     a.click();
-  }
-
-  // I should make this as queryData interface or make query-data implementation simpler
-  onQueryData(data: any) {
-    switch (data.purpose) {
-      case "formData":
-        this.formData = data.message;
-        //console.log(data.message);
-        break;
-      case "whereId":
-        this.whereId = data.message;
-        break;
-      default:
-        break;
-    }
-
   }
 }

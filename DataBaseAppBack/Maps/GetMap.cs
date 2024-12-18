@@ -5,30 +5,39 @@ public static class MapGet
 {
     public static RouteGroupBuilder GetMap(this RouteGroupBuilder getGroup)
     {
-        getGroup.MapGet("get/students", async () => 
+        getGroup.MapGet("get/students", async (string whereOption) => 
         {
-            var result = await DBTools.GetStudents();
-            return result.Count > 0 ?  Results.Ok(result) : Results.NotFound(new {});
+            Console.WriteLine(whereOption);
+            var result = await DBTools.GetStudents(whereOption);
+            return result.Count > 0 ?  Results.Ok(
+                    new { columns = new string[]{"id", "surname", "related_group", "join_year", "rating"}, data = result })  
+            : Results.NotFound(new {});
         });
 
-        getGroup.MapGet("get/groups", async () => 
+        getGroup.MapGet("get/groups", async (string whereOption) => 
         {
-            var result = await DBTools.GetGroups();
-            return result.Count > 0 ?  Results.Ok(result) : Results.NotFound(new {});
+            var result = await DBTools.GetGroups(whereOption);
+            return result.Count > 0 ?  Results.Ok(
+                    new { columns = new string[]{"id", "code", "lectern_id", "speciality_id"}, data = result })  
+            : Results.NotFound(new {});
         });
 
-        getGroup.MapGet("get/lecterns", async () => 
+        getGroup.MapGet("get/lecterns", async (string whereOption) => 
         {
-            var result = await DBTools.GetLecterns();
-            return result.Count > 0 ?  Results.Ok(result) : Results.NotFound(new {});
+            var result = await DBTools.GetLecterns(whereOption);
+            return result.Count > 0 ?  Results.Ok(
+                    new { columns = new string[]{"id", "faculty", "manager"}, data = result })  
+            : Results.NotFound(new {});
         });
 
-        getGroup.MapGet("get/specialities", async () => 
+        getGroup.MapGet("get/specialities", async (string whereOption) => 
         {
-            var result = await DBTools.GetSpecialities();
-            return result.Count > 0 ?  Results.Ok(result) : Results.NotFound(new {});
+            var result = await DBTools.GetSpecialities(whereOption);
+            return result.Count > 0 ?  Results.Ok(
+                    new { columns = new string[]{"id", "name", "field", "code"}, data = result })  
+            : Results.NotFound(new {});
         });
-        
+
         return getGroup;
     }
 }

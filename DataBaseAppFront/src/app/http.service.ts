@@ -1,18 +1,18 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { identity, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient){}
 
   private host: string = "http://localhost:5233/api";
 
-  GetData(url: string): Observable<any>{
-    return this.http.get<any>(this.host + "/get" + url);
+  GetData(url: string, whereOption: string = ""): Observable<any>{
+    return this.http.get<any>(this.host + "/get" + url + `?whereOption=${whereOption}`);
   }
 
   PostData(url:string, data: any){

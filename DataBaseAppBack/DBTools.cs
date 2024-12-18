@@ -11,9 +11,14 @@ public static class DBTools
         dataSource = dataSourceBuilder.Build();
     }
 
-    public static async Task<List<Student>> GetStudents()
+    public static string TransformWhere(string whereOption)
     {
-        using var reader = await dataSource.CreateCommand($"SELECT * FROM Students;").ExecuteReaderAsync();
+        return whereOption == "" ? "" : $"WHERE {whereOption}";
+    }
+
+    public static async Task<List<Student>> GetStudents(string whereOption = "")
+    {
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM Students {TransformWhere(whereOption)};").ExecuteReaderAsync();
         var students = new List<Student>();
 
         while (await reader.ReadAsync())
@@ -24,9 +29,9 @@ public static class DBTools
         return students;
     }
 
-    public static async Task<List<Group>> GetGroups()
+    public static async Task<List<Group>> GetGroups(string whereOption = "")
     {
-        using var reader = await dataSource.CreateCommand($"SELECT * FROM Groups;").ExecuteReaderAsync();
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM Groups {TransformWhere(whereOption)};").ExecuteReaderAsync();
         var collection = new List<Group>();
 
         while (await reader.ReadAsync())
@@ -37,9 +42,9 @@ public static class DBTools
         return collection;
     }
 
-    public static async Task<List<Lectern>> GetLecterns()
+    public static async Task<List<Lectern>> GetLecterns(string whereOption = "")
     {
-        using var reader = await dataSource.CreateCommand($"SELECT * FROM Lecterns;").ExecuteReaderAsync();
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM Lecterns {TransformWhere(whereOption)};").ExecuteReaderAsync();
         var collection = new List<Lectern>();
 
         while (await reader.ReadAsync())
@@ -50,9 +55,9 @@ public static class DBTools
         return collection;
     }
 
-    public static async Task<List<Speciality>> GetSpecialities()
+    public static async Task<List<Speciality>> GetSpecialities(string whereOption = "")
     {
-        using var reader = await dataSource.CreateCommand($"SELECT * FROM Specialities;").ExecuteReaderAsync();
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM Specialities {TransformWhere(whereOption)};").ExecuteReaderAsync();
         var collection = new List<Speciality>();
 
         while (await reader.ReadAsync())
