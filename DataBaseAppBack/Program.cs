@@ -1,15 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using DataBaseAppBack;
+using Model;
 using Maps;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContextPool<ModelContext>(opt => opt.UseNpgsql(
+            builder.Configuration.GetConnectionString("Default")
+            ));
 builder.Services.AddCors(options => {
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.WithOrigins("http://localhost:4200", "*", "*").AllowAnyHeader().AllowAnyMethod();
-    });
-});
+        options.AddDefaultPolicy(policy =>
+                {
+                policy.WithOrigins("http://localhost:4200", "*", "*").AllowAnyHeader().AllowAnyMethod();
+                });
+        });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,11 +29,11 @@ app.UseHttpsRedirection();
 app.UseCors();
 
 app.MapGroup("/api/")
-    .PostMap()
-    .GetMap()
-    .DeleteMap()
-    .UpdateMap()
-    .WithTags("Api");
+//    .PostMap()
+      .GetMap();
+//    .DeleteMap()
+//    .UpdateMap()
+//    .WithTags("Api");
 
 
 app.Run();

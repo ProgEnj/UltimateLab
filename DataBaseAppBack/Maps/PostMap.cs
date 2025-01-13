@@ -6,24 +6,28 @@ public static class MapPost
 {
     public static RouteGroupBuilder PostMap(this RouteGroupBuilder group)
     {
-        group.MapPost("post/students", async (Student student) => 
+        group.MapPost("post/customers", async (Customer customer) => 
         {
-            return await DBTools.InsertStudent(student) == 1 ? Results.Created() : Results.StatusCode(500);
+        });
+
+        group.MapPost("post/suppliers", async (Supplier supplier) => 
+        {
+        });
+
+        group.MapPost("post/purchases", async (Purchase purchase) => 
+        {
+        });
+
+        group.MapPost("post/selligs", async (Selling product) => 
+        {
         });
 
         group.MapPost("post/groups", async (Group group) => 
         {
-            return await DBTools.InsertGroup(group) == 1 ? Results.Created() : Results.StatusCode(500);
         });
 
-        group.MapPost("post/lecterns", async (Lectern lectern) => 
+        group.MapPost("post/products", async (Product product) => 
         {
-            return await DBTools.InsertLectern(lectern) == 1 ? Results.Created() : Results.StatusCode(500);
-        });
-
-        group.MapPost("post/specialities", async (Speciality speciality) => 
-        {
-            return await DBTools.InsertSpeciality(speciality) == 1 ? Results.Created() : Results.StatusCode(500);
         });
         
         return group;

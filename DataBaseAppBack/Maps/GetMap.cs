@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Model;
 using DataBaseAppBack;
 namespace Maps;
 
@@ -5,36 +7,51 @@ public static class MapGet
 {
     public static RouteGroupBuilder GetMap(this RouteGroupBuilder getGroup)
     {
-        getGroup.MapGet("get/students", async (string whereOption) => 
+        getGroup.MapGet("get/purchases", async (string whereOption, ModelContext modelContext) => 
         {
-            Console.WriteLine(whereOption);
-            var result = await DBTools.GetStudents(whereOption);
+            var result = await modelContext.Purchases.ToListAsync();
+            return result.Count > 0 ? Results.Ok(
+                    new { columns = new string[]{"id", "Supplier", "Group", "Product", "Date", "Amount", "Sum"}, data = result })  
+            : Results.NotFound(new {});
+        });
+        
+        getGroup.MapGet("get/sellings", async (string whereOption, ModelContext modelContext) => 
+        {
+            var result = await modelContext.Sellings.ToListAsync();
             return result.Count > 0 ?  Results.Ok(
-                    new { columns = new string[]{"id", "surname", "related_group", "join_year", "rating"}, data = result })  
+                    new { columns = new string[]{"id", "Supplier", "Group", "Product", "Date", "Amount", "Sum"}, data = result })  
             : Results.NotFound(new {});
         });
 
-        getGroup.MapGet("get/groups", async (string whereOption) => 
+        getGroup.MapGet("get/groups", async (string whereOption, ModelContext modelContext) => 
         {
-            var result = await DBTools.GetGroups(whereOption);
+            var result = await modelContext.Groups.Where().ToListAsync();
             return result.Count > 0 ?  Results.Ok(
-                    new { columns = new string[]{"id", "code", "lectern_id", "speciality_id"}, data = result })  
+                    new { columns = new string[]{"id", "product_group"}, data = result })  
             : Results.NotFound(new {});
         });
 
-        getGroup.MapGet("get/lecterns", async (string whereOption) => 
+        getGroup.MapGet("get/suppliers", async (string whereOption, ModelContext modelContext) => 
         {
-            var result = await DBTools.GetLecterns(whereOption);
+            var result = await modelContext.Suppliers.ToListAsync();
             return result.Count > 0 ?  Results.Ok(
-                    new { columns = new string[]{"id", "faculty", "manager"}, data = result })  
+                    new { columns = new string[]{"id", "firstName", "middleName", "lastName", "organization", "phonenumber", "accountant", "address"}, data = result })  
             : Results.NotFound(new {});
         });
 
-        getGroup.MapGet("get/specialities", async (string whereOption) => 
+        getGroup.MapGet("get/customers", async (string whereOption, ModelContext modelContext) => 
         {
-            var result = await DBTools.GetSpecialities(whereOption);
+            var result = await modelContext.Customers.ToListAsync();
             return result.Count > 0 ?  Results.Ok(
-                    new { columns = new string[]{"id", "name", "field", "code"}, data = result })  
+                    new { columns = new string[]{"id", "firstName", "middleName", "lastName", "organization", "phonenumber", "accountant", "address"}, data = result })  
+            : Results.NotFound(new {});
+        });
+
+        getGroup.MapGet("get/products", async (string whereOption, ModelContext modelContext) => 
+        {
+            var result = await modelContext.Products.ToListAsync();
+            return result.Count > 0 ?  Results.Ok(
+                    new { columns = new string[]{"id", "group_id", "name", "ordering", "price"}, data = result })  
             : Results.NotFound(new {});
         });
 
