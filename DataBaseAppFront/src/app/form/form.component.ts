@@ -23,7 +23,9 @@ export class FormComponent implements OnChanges {
 
   onSubmit(event: any) {
     this.formData.emit(this.form.getRawValue());
-    this.whereField.emit(`${this.whereOption}='${this.whereValue}'`);
+    if(this.whereValue !== ""){
+      this.whereField.emit(`${this.whereOption}='${this.whereValue}'`);
+    }
   }
 
   onWhereField(event: any) {

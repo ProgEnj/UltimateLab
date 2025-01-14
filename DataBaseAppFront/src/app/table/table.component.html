@@ -2,7 +2,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th>✔</th>
+        <th style="width: 16px; justify-content: center;">✔</th>
         @for(item of headerSource; track $index){
           @if(item.isShown){
             <th>{{ item.label }}</th>

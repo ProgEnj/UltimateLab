@@ -26,4 +26,8 @@ export class HttpService {
   UpdateData(table:string, id:number, data:Array<string>){
     return this.http.put(this.host + `/update?table=${table}&id=${id}`, data);
   }
+
+  UpdateDataProductPrice(id:number){
+    return this.http.put(this.host + `/update/product/price?id=${id}`, {});
+  }
 }

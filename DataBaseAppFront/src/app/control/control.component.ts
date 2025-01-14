@@ -42,6 +42,14 @@ export class ControlComponent {
         case "DELETE":
           this.http.DeleteData(this.tableOption, this.whereId!).subscribe(x => this.RetrieveQuery());
           break
+        case "Task1":
+          let id = this.dataSource[this.whereId! - 1]["groupId"];
+          this.http.UpdateDataProductPrice(id).subscribe(x => this.RetrieveQuery());
+          break
+        case "Task3":
+          this.RetrieveQuery();
+          this.http.GetData("/products/amount", this.whereField).subscribe(json => {this.headerSource = json.columns.map((x:any) => ({label: x, isShown: true})); this.dataSource = json.data});
+          break
         default:
           break;
       }

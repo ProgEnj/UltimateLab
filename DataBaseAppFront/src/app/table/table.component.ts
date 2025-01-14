@@ -14,6 +14,8 @@ export class TableComponent {
   checkedRow = output<any>();
 
   onRadioCheck(data: any) {
+    console.log(this.dataSource);
+    console.log(this.headerSource);
     this.checkedRow.emit(data);
   }
 }

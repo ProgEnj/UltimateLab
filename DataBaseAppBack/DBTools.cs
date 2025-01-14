@@ -70,11 +70,6 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
             collection.Add(new Product(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4)));
         }
 
-        var strir = $@"aboba
-        abva
-        asdf
-        ";
-
         return collection;
     }
 
@@ -84,7 +79,7 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
         $@"
             SELECT ""Groups"".id, ""Groups"".product_group, SUM(amount) FROM ""Purchases""
             INNER JOIN ""Groups"" ON ""Purchases"".groupid = ""Groups"".id
-            WHERE ""Groups"".product_group {whereOption} 
+            WHERE {whereOption} 
             GROUP BY product_group, ""Groups"".id"
 
         ).ExecuteReaderAsync();
@@ -252,6 +247,26 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
                 new() {Value = id},
             }
         };
+        var result = await cmd.ExecuteNonQueryAsync();      
+        return result;
+    }
+
+    public static async Task<int> UpdateProductsSizeByGroups(int id)
+    {
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var cmd = new NpgsqlCommand(
+        $@"
+            UPDATE ""Products""
+            SET price = price - (price / 100)
+            WHERE groupid = $1;"
+        , connection)
+        {
+            Parameters =
+            {
+                new() {Value = id}
+            }
+        };
+
         var result = await cmd.ExecuteNonQueryAsync();      
         return result;
     }

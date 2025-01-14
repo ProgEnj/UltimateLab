@@ -10,6 +10,11 @@ public static class MapUpdate
         {
             return await DBTools.UpdateInTable(table, id, values) == 1 ? Results.Ok() : Results.StatusCode(500);
         });
+
+        group.MapPut("update/product/price", async (int id) => 
+        {
+            return await DBTools.UpdateProductsSizeByGroups(id) == 1 ? Results.Ok() : Results.StatusCode(500);
+        });
         
         return group;
     }
