@@ -67,7 +67,33 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
 
         while (await reader.ReadAsync())
         {
-            collection.Add(new Product(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4)));
+            collection.Add(new Product(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4)));
+        }
+
+        var strir = $@"aboba
+        abva
+        asdf
+        ";
+
+        return collection;
+    }
+
+    public static async Task<List<Task3DTO>> GetProductAmount(string whereOption = "")
+    {
+        using var reader = await dataSource.CreateCommand(
+        $@"
+            SELECT ""Groups"".id, ""Groups"".product_group, SUM(amount) FROM ""Purchases""
+            INNER JOIN ""Groups"" ON ""Purchases"".groupid = ""Groups"".id
+            WHERE ""Groups"".product_group {whereOption} 
+            GROUP BY product_group, ""Groups"".id"
+
+        ).ExecuteReaderAsync();
+
+        var collection = new List<Task3DTO>();
+
+        while (await reader.ReadAsync())
+        {
+            collection.Add(new Task3DTO(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2)));
         }
 
         return collection;
@@ -80,7 +106,7 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
 
         while (await reader.ReadAsync())
         {
-            collection.Add(new Purchase(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetDateTime(4), reader.GetInt32(5), reader.GetInt32(6)));
+            collection.Add(new Purchase(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetDateTime(4), reader.GetInt32(5), reader.GetInt32(6)));
         }
 
         return collection;
@@ -93,7 +119,7 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
 
         while (await reader.ReadAsync())
         {
-            collection.Add(new Selling(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetDateTime(4), reader.GetInt32(5), reader.GetInt32(6)));
+            collection.Add(new Selling(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetDateTime(4), reader.GetInt32(5), reader.GetInt32(6)));
         }
 
         return collection;
@@ -183,9 +209,9 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
         {
             Parameters = 
             {
-                new() {Value = purchase.supplierId},
-                new() {Value = purchase.groupId},
-                new() {Value = purchase.productId},
+                new() {Value = purchase.supplierid},
+                new() {Value = purchase.groupid},
+                new() {Value = purchase.productid},
                 new() {Value = purchase.date},
                 new() {Value = purchase.amount},
                 new() {Value = purchase.sum},
@@ -203,9 +229,9 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
         {
             Parameters = 
             {
-                new() {Value = selling.customerId},
-                new() {Value = selling.groupId},
-                new() {Value = selling.productId},
+                new() {Value = selling.customerid},
+                new() {Value = selling.groupid},
+                new() {Value = selling.productid},
                 new() {Value = selling.date},
                 new() {Value = selling.amount},
                 new() {Value = selling.sum},
