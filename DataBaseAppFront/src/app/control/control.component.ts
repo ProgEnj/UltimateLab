@@ -50,6 +50,18 @@ export class ControlComponent {
           this.RetrieveQuery();
           this.http.GetData("/products/amount", this.whereField).subscribe(json => {this.headerSource = json.columns.map((x:any) => ({label: x, isShown: true})); this.dataSource = json.data});
           break
+        case "Task4":
+          this.RetrieveQuery();
+          this.http.GetData("/purchases/sum", this.whereField).subscribe(json => {this.headerSource = json.columns.map((x:any) => ({label: x, isShown: true})); this.dataSource = json.data});
+          break
+        case "DbInfo":
+          this.RetrieveQuery();
+          this.http.GetData("/dbinfo", "").subscribe(json => {this.headerSource = json.columns.map((x:any) => ({label: x, isShown: true})); this.dataSource = json.data});
+          break
+        case "TablesInfo":
+          this.RetrieveQuery();
+          this.http.GetData("/tablesinfo", "").subscribe(json => {this.headerSource = json.columns.map((x:any) => ({label: x, isShown: true})); this.dataSource = json.data});
+          break
         default:
           break;
       }

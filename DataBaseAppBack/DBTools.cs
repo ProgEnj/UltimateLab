@@ -17,6 +17,63 @@ public static class DBTools
         return whereOption == "" ? "" : $"WHERE {whereOption}";
     }
 
+    public static async Task<List<DbInfo>> GetDbInfo()
+    {
+        using var reader = await dataSource.CreateCommand(
+                $@" 
+                    SELECT current_database() AS database_name
+                    UNION
+                    SELECT setting AS database_location
+                    FROM pg_settings
+                    WHERE name = 'data_directory'
+                    UNION
+                    SELECT version() AS database_type;"
+                ).ExecuteReaderAsync();
+
+        var students = new List<DbInfo>();
+
+        while (await reader.ReadAsync())
+        {
+            students.Add(new DbInfo(reader.GetString(0)));
+        }
+
+        return students;
+    }
+
+    public static async Task<List<TableInfo>> GetTablesInfo()
+    {
+        using var reader = await dataSource.CreateCommand(
+                $@" 
+                    -- Загальний склад бази даних: Назва таблиці, Кількість записів, Кількість полів
+                    SELECT 
+                        relname AS table_name,
+                        reltuples::bigint AS row_count,
+                        (SELECT COUNT(*) 
+                         FROM information_schema.columns 
+                         WHERE table_name = c.relname 
+                           AND table_schema = 'public') AS column_count
+                    FROM 
+                        pg_class c
+                    JOIN 
+                        pg_namespace n ON n.oid = c.relnamespace
+                    WHERE 
+                        c.relkind = 'r' -- Тільки звичайні таблиці
+                        AND n.nspname = 'public' -- Обмежити таблиці лише схемою public
+                    ORDER BY 
+                        table_name;"
+                ).ExecuteReaderAsync();
+
+        var students = new List<TableInfo>();
+
+        while (await reader.ReadAsync())
+        {
+            students.Add(new TableInfo(reader.GetString(0), reader.GetInt32(1), reader.GetInt32(2)));
+        }
+
+        return students;
+    }
+    
+
     public static async Task<List<Customer>> GetCustomers(string whereOption = "")
     {
         using var reader = await dataSource.CreateCommand($"SELECT * FROM \"Customers\" {TransformWhere(whereOption)};").ExecuteReaderAsync();
@@ -34,7 +91,7 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
     
     public static async Task<List<Supplier>> GetSuppliers(string whereOption = "")
     {
-        using var reader = await dataSource.CreateCommand($"SELECT * FROM \"Supplier\" {TransformWhere(whereOption)};").ExecuteReaderAsync();
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM \"Suppliers\" {TransformWhere(whereOption)};").ExecuteReaderAsync();
         var students = new List<Supplier>();
 
         while (await reader.ReadAsync())
@@ -106,6 +163,30 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
 
         return collection;
     }
+
+    public static async Task<List<Task4DTO>> GetPurchasesSumByDate(string whereOption = "")
+    {
+        using var reader = await dataSource.CreateCommand(
+        $@"
+            SELECT ""Suppliers"".""firstName"", ""Suppliers"".""middleName"", ""Suppliers"".""lastName"",
+            ""Purchases"".date, SUM(""Purchases"".sum) FROM ""Purchases""
+            INNER JOIN ""Suppliers"" ON ""Suppliers"".id = ""Purchases"".supplierid
+            WHERE {whereOption}
+            GROUP BY ""firstName"", ""middleName"", ""lastName"", date"
+
+        ).ExecuteReaderAsync();
+
+        var collection = new List<Task4DTO>();
+
+        while (await reader.ReadAsync())
+        {
+            collection.Add(new Task4DTO(reader.GetString(0), reader.GetString(1), reader.GetString(2),
+                        reader.GetDateTime(3), reader.GetInt32(4)
+                        ));
+        }
+
+        return collection;
+    }
     
     public static async Task<List<Selling>> GetSellings(string whereOption = "")
     {
@@ -123,7 +204,7 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
     public static async Task<int> InsertCustomer(Customer customer)
     {
         await using var connection = await dataSource.OpenConnectionAsync();
-        await using var cmd = new NpgsqlCommand("INSERT INTO \"Customers\" (firstName, middleName, lastName, organization, phoneNumber, accountant, address) " + 
+        await using var cmd = new NpgsqlCommand("INSERT INTO \"Customers\" (\"firstName\", \"middleName\", \"lastName\", organization, \"phoneNumber\", accountant, address) " + 
         "VALUES ($1, $2, $3, $4, $5, $6, $7);", connection)
         {
             Parameters = 
@@ -144,7 +225,7 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
     public static async Task<int> InsertSupplier(Supplier supplier)
     {
         await using var connection = await dataSource.OpenConnectionAsync();
-        await using var cmd = new NpgsqlCommand("INSERT INTO \"Suppliers\" (firstName, middleName, lastName, organization, phoneNumber, accountant, address) " + 
+        await using var cmd = new NpgsqlCommand("INSERT INTO \"Suppliers\" (\"firstName\", \"middleName\", \"lastName\", organization, \"phoneNumber\", accountant, address) " + 
         "VALUES ($1, $2, $3, $4, $5, $6, $7);", connection)
         {
             Parameters = 
