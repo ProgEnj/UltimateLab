@@ -5,6 +5,21 @@ public static class MapGet
 {
     public static RouteGroupBuilder GetMap(this RouteGroupBuilder getGroup)
     {
+        getGroup.MapGet("get/db", () =>{
+            var result = DBTools.ConnectToDB();
+            return result > 0 ? Results.Ok() : Results.NotFound(new {});
+        });
+
+        getGroup.MapGet("get/db2", () =>{
+            var result = DBTools.ConntectToDB2();
+            return result > 0 ? Results.Ok() : Results.NotFound(new {});
+        });
+
+        getGroup.MapGet("get/db2/tables", async () =>{
+            var result = await DBTools.CreateTables();
+            return result > 0 ? Results.Ok() : Results.NotFound(new {});
+        });
+
         getGroup.MapGet("get/dbinfo", async () => 
         {
             var result = await DBTools.GetDbInfo();

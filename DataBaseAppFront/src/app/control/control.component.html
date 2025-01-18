@@ -32,6 +32,11 @@
               </select>
           </div>
         </div>
+          <div>
+            <button type="button" class="button" (click)="ConnectToDB()">Connect to DB</button>
+            <button type="button" class="button" (click)="ConnectToDB2()">Connect to DB2</button>
+            <button type="button" class="button" (click)="CloneTo2DB()">Clone data to DB2</button>
+          </div>
         <div class="control-checkboxes">
           <div class="checkboxes">
               @for (item of headerSource; track $index; let i = $index) {

@@ -26,6 +26,19 @@ export class ControlComponent {
   textAreaShow: boolean = false;
   sqlQuery: string = "";
 
+  CloneTo2DB(): void {
+    this.http.GetData("/db2/tables").subscribe();
+    this.dataSource.forEach(x => this.http.PostData("/" + this.tableOption, x).subscribe());
+  }
+
+  ConnectToDB(): void {
+    this.http.GetData("/db").subscribe();
+  }
+
+  ConnectToDB2(): void {
+    this.http.GetData("/db2").subscribe();
+  }
+
   ExecuteQuery(queryOption: string){
       switch (queryOption) {
         case "RETRIEVE":
