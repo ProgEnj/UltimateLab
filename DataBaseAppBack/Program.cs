@@ -29,6 +29,4 @@ app.MapGroup("/api/")
     .UpdateMap()
     .WithTags("Api");
 
-
 app.Run();
-

@@ -1,12 +1,14 @@
-using System.Data;
 using Npgsql;
 using Model;
+using FastReport.Data.JsonConnection;
 namespace DataBaseAppBack;
+
 public static class DBTools
 {
     private static string connetionString1 = "Host=localhost;Username=postgres;Password=postpast;Database=ForLabs";
     private static string connetionString2 = "Host=localhost;Username=postgres;Password=postpast;Database=ForLabs2";
     private static NpgsqlDataSource dataSource;
+
     static DBTools()
     {
         ConnectToDB();

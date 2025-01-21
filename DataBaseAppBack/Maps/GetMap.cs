@@ -100,6 +100,14 @@ public static class MapGet
             : Results.NotFound(new {});
         });
 
+        getGroup.MapGet("get/products/report", async (string whereOption) => 
+        {
+            var result = await ReportsService.ProductReport(whereOption);
+            return result > 0 ?  Results.Ok(
+                    new { columns = new string[]{"id", "product_group", "amount"}, data = result })  
+            : Results.NotFound(new {});
+        });
+
         return getGroup;
     }
 }

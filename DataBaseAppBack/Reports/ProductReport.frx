@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="01/21/2025 11:22:33" ReportInfo.Modified="01/21/2025 12:52:24" ReportInfo.CreatorVersion="2025.1.0.0">
+  <Dictionary>
+    <JsonDataConnection Name="Connection" ConnectionString="rijcmlqAQDlU5tcJVlvH3U74hdWT6Aut/tHrNOkspHaV8Bb7ezYX8MvOeSMiqShx8zMKIod4o5XCfwnZ9C+QW7iXC1hCa98kEprPkKAe1vxJX7Xeg4=">
+      <TableDataSource Name="Data" DataType="System.Int32" Enabled="true" TableName="Data">
+        <Column Name="Id" DataType="System.Int32"/>
+        <Column Name="GroupId" DataType="System.Int32"/>
+        <Column Name="Name" DataType="System.String"/>
+        <Column Name="Ordering" DataType="System.String"/>
+        <Column Name="Price" DataType="System.Int32"/>
+      </TableDataSource>
+    </JsonDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="75.6">
+      <TextObject Name="Text12" Left="151.2" Width="415.8" Height="75.6" Text="Product report" HorzAlign="Center" VertAlign="Center" Font="Arial, 26pt, style=Bold"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="79.6" Width="718.2" Height="37.8">
+      <TextObject Name="Text3" Left="18.9" Top="9.45" Width="94.5" Height="18.9" Text="id" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+      <TextObject Name="Text4" Left="132.3" Top="9.45" Width="94.5" Height="18.9" Text="groupid" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+      <TextObject Name="Text6" Left="245.7" Top="9.45" Width="94.5" Height="18.9" Text="name" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+      <TextObject Name="Text7" Left="359.1" Top="9.45" Width="94.5" Height="18.9" Text="ordering" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+      <TextObject Name="Text10" Left="472.5" Top="9.45" Width="94.5" Height="18.9" Text="price" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="121.4" Width="718.2" Height="56.7" DataSource="Data">
+      <TextObject Name="Text1" Left="18.9" Top="9.45" Width="94.5" Height="18.9" Text="[Data.Id]" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+      <TextObject Name="Text5" Left="133.15" Top="9.45" Width="94.5" Height="18.9" Text="[Data.Groupid]" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+      <TextObject Name="Text8" Left="245.7" Top="9.45" Width="94.5" Height="18.9" Text="[Data.Name]" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+      <TextObject Name="Text9" Left="359.1" Top="9.45" Width="94.5" Height="18.9" Text="[Data.Ordering]" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+      <TextObject Name="Text11" Left="473.3" Top="9.45" Width="94.5" Height="18.9" Text="[Data.Price]" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="182.1" Width="718.2" Height="122.85"/>
+  </ReportPage>
+</Report>
