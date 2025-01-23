@@ -15,6 +15,10 @@ export class HttpService {
     return this.http.get<any>(this.host + "/get" + url + `?whereOption=${whereOption}`);
   }
 
+  GetAuthenticate(url: string, query: any): Observable<any>{
+    return this.http.get<any>(this.host + "/get" + url + query);
+  }
+
   PostData(url:string, data: any){
     return this.http.post<any>(this.host + "/post" + url, data);
   }

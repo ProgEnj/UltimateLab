@@ -1,6 +1,6 @@
 using Npgsql;
 using Model;
-using FastReport.Data.JsonConnection;
+using System.Text.Json;
 namespace DataBaseAppBack;
 
 public static class DBTools
@@ -51,9 +51,63 @@ public static class DBTools
         return 1;
     }
 
+    public static async Task<List<UserCredentials>> GetAuthenticate(UserCredentials user)
+    {
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM users WHERE username='{user.username}' AND password='{user.password}'").ExecuteReaderAsync();
+        var collection = new List<UserCredentials>();
+
+        while (await reader.ReadAsync())
+        {
+            collection.Add(new UserCredentials(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
+        }
+
+        return collection; 
+    }
+    
+
     public static string TransformWhere(string whereOption)
     {
         return whereOption == "" ? "" : $"WHERE {whereOption}";
+    }
+
+    public static async Task<string> GetProductsEnqueued(string whereOption)
+    {
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM \"Products\" {TransformWhere(whereOption)};").ExecuteReaderAsync();
+        var collection = new List<Product>();
+
+        while (await reader.ReadAsync())
+        {
+            collection.Add(new Product(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetString(3), reader.GetInt32(4)));
+        }
+
+        return JsonSerializer.Serialize(collection);
+    }
+
+    public static async Task<string> GetGroupsEnqueued(string whereOption)
+    {
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM \"Groups\" {TransformWhere(whereOption)};").ExecuteReaderAsync();
+        var collection = new List<Group>();
+
+        while (await reader.ReadAsync())
+        {
+            collection.Add(new Group(reader.GetInt32(0), reader.GetString(1)));
+        }
+        
+        return JsonSerializer.Serialize(collection);
+    }
+
+    public static async Task<string> GetPurchasesEnqueued(string whereOption)
+    {
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM \"Purchases\" {TransformWhere(whereOption)};").ExecuteReaderAsync();
+        var collection = new List<Purchase>();
+
+        while (await reader.ReadAsync())
+        {
+            collection.Add(new Purchase(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetDateTime(4), reader.GetInt32(5), reader.GetInt32(6)));
+        }
+
+        return JsonSerializer.Serialize(collection);
+
     }
 
     public static async Task<List<DbInfo>> GetDbInfo()

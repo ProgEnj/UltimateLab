@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TableComponent } from '../table/table.component';
-import { ControlComponent } from '../control/control.component';
 import { FormComponent } from '../form/form.component';
+import { ControlComponent } from '../control/control.component';
 
 @Component({
   selector: 'app-main',

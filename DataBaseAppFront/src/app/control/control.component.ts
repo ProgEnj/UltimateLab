@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HttpService } from '../http.service';
 import { TableComponent } from '../table/table.component';
+import { ActivatedRoute } from '@angular/router';
 import { FormComponent } from '../form/form.component';
 
 @Component({
@@ -10,14 +11,21 @@ import { FormComponent } from '../form/form.component';
   templateUrl: './control.component.html',
   styleUrl: './control.component.scss'
 })
-export class ControlComponent {
-  constructor(private http: HttpService) {}
+export class ControlComponent implements OnInit {
+  constructor(private http: HttpService, private router: ActivatedRoute) {}
+
+  ngOnInit(): void {
+      this.priority = this.router.snapshot.paramMap.get('priority');
+      console.log(this.priority);
+  }
 
   dataSource: Array<any> = [];
   headerSource: Array<any> = [];
 
   tableOption: string = "Choose table";
   queryOption: string = "Choose query type";
+
+  priority: string | null = "1";
 
   formData: any;
   whereField: string = "";
@@ -74,6 +82,12 @@ export class ControlComponent {
         case "TablesInfo":
           this.RetrieveQuery();
           this.http.GetData("/tablesinfo", "").subscribe(json => {this.headerSource = json.columns.map((x:any) => ({label: x, isShown: true})); this.dataSource = json.data});
+          break
+        case "Enqueue":
+          this.http.GetData(`/${this.tableOption}/enqueued`, this.whereField + `&priority=${this.priority}`).subscribe(json => {this.headerSource = json.columns.map((x:any) => ({label: x, isShown: true})); this.dataSource = json.data});
+          break
+        case "Resolve":
+          this.http.GetData("/resolve").subscribe();
           break
         default:
           break;

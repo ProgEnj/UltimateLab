@@ -1,4 +1,6 @@
 using DataBaseAppBack;
+using Model;
+using System.Text.Json;
 namespace Maps;
 
 public static class MapGet
@@ -34,6 +36,49 @@ public static class MapGet
             return result.Count > 0 ? Results.Ok(
                     new { columns = new string[]{"table_name", "row_count", "column_count"}, data = result })  
             : Results.NotFound(new {});
+        });
+
+        getGroup.MapGet("get/authentication", async (string username, string password) => 
+        {
+            var result = await DBTools.GetAuthenticate(new UserCredentials(0, username, password));
+            return result.Count > 0 ? Results.Ok(
+                    new { authenticate = true })  
+            : Results.NotFound(new { authenticate = false });
+        });
+
+        getGroup.MapGet("get/products/enqueued", async (string whereOption, int priority) => 
+        {
+            var task = await Queue.AddItem(new Task<Task<string>>(async () => { return await DBTools.GetProductsEnqueued(whereOption);}), priority);
+            var result = JsonSerializer.Deserialize<List<Product>>(await task);
+
+            return result.Count > 0 ? Results.Ok(
+                    new { columns = new string[]{"id", "groupId", "name", "ordering", "price"}, data = result })  
+            : Results.NotFound(new {});
+        });
+
+        getGroup.MapGet("get/groups/enqueued", async (string whereOption, int priority) => 
+        {
+            var task = await Queue.AddItem(new Task<Task<string>>(async () => { return await DBTools.GetGroupsEnqueued(whereOption);}), priority);
+            var result = JsonSerializer.Deserialize<List<Group>>(await task);
+
+            return result.Count > 0 ? Results.Ok(
+                    new { columns = new string[]{"id", "product_group"}, data = result })  
+            : Results.NotFound(new {});
+        });
+
+        getGroup.MapGet("get/purchases/enqueued", async (string whereOption, int priority) => 
+        {
+            var task = await Queue.AddItem(new Task<Task<string>>(async () => { return await DBTools.GetPurchasesEnqueued(whereOption);}), priority);
+            var result = JsonSerializer.Deserialize<List<Purchase>>(await task);
+
+            return result.Count > 0 ? Results.Ok(
+                    new { columns = new string[]{"id", "supplierid", "groupid", "productid", "date", "amount", "sum"}, data = result })  
+            : Results.NotFound(new {});
+        });
+
+        getGroup.MapGet("get/resolve", () => 
+        {
+            Queue.Resolve();
         });
 
         getGroup.MapGet("get/purchases", async (string whereOption) => 
