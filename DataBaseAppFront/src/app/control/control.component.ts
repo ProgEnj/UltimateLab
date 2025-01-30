@@ -64,7 +64,9 @@ export class ControlComponent implements OnInit {
           this.http.DeleteData(this.tableOption, this.whereId!).subscribe(x => this.RetrieveQuery());
           break
         case "Task1":
+          //console.log(this.whereId);
           let id = this.dataSource[this.whereId! - 1]["groupId"];
+          //console.log(id);
           this.http.UpdateDataProductPrice(id).subscribe(x => this.RetrieveQuery());
           break
         case "Task3":
@@ -88,6 +90,9 @@ export class ControlComponent implements OnInit {
           break
         case "Resolve":
           this.http.GetData("/resolve").subscribe();
+          break
+        case "Report":
+          this.http.GetData("/products/report").subscribe();
           break
         default:
           break;

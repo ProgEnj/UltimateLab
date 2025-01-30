@@ -211,7 +211,7 @@ reader.GetString(5), reader.GetString(6), reader.GetString(7)
 
     public static async Task<List<Product>> GetProducts(string whereOption = "")
     {
-        using var reader = await dataSource.CreateCommand($"SELECT * FROM \"Products\" {TransformWhere(whereOption)};").ExecuteReaderAsync();
+        using var reader = await dataSource.CreateCommand($"SELECT * FROM \"Products\" {TransformWhere(whereOption)} ORDER BY id;").ExecuteReaderAsync();
         var collection = new List<Product>();
 
         while (await reader.ReadAsync())

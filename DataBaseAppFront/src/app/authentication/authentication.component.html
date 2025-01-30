@@ -1,12 +1,19 @@
-<div class="where-input" style="">
-  <input type="text" [(ngModel)]="login">
-</div>
-<div class="where-input" style="">
-  <input type="text" [(ngModel)]="password">
-</div>
-<div class="where-input" style="">
-  <input type="number" [(ngModel)]="priority">
-</div>
-<div>
-  <button (click)="TryLogin()">Log in</button>
+
+<div style="display: flex; height: 100%; flex-direction: column; justify-content: center; align-items: center;">
+  <h2>Log In</h2>
+  <div class="where-input" style="">
+    <label for="login">login</label>
+    <input name="login" type="text" [(ngModel)]="login">
+  </div>
+  <div class="where-input" style="">
+    <label for="pass">password</label>
+    <input name="pass" type="text" [(ngModel)]="password">
+  </div>
+  <div class="where-input" style="">
+    <label for="pri">priority</label>
+    <input name="pri" type="number" [(ngModel)]="priority">
+  </div>
+  <div>
+    <button (click)="TryLogin()">Log in</button>
+  </div>
 </div>
